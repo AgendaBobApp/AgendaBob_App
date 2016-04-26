@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "687939024232",
+    "project_id": "cs419-project1"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:687939024232:android:1495cdcd1a9cf3b4",
+        "android_client_info": {
+          "package_name": "casco.project1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "687939024232-cusrs1eiq0uobjg6s8831q89epbb5niu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "casco.project1",
+            "certificate_hash": "E4F42648106A916B3EA6D217EE58F08149EA14C2"
+          }
+        },
+        {
+          "client_id": "687939024232-e8nha2i6bu0dft554e96usaonuka1fg5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhtTg932axawPSc15IwD5-VZHHkf3AqWc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
