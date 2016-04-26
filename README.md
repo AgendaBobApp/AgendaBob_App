@@ -54,6 +54,10 @@ Other functions can be folded in later:
   - Tutorials, potentially.  If UI is good, maybe we don't need them.
   - Invite-only vs. public (aka just need the code)
 
+Eventually:
+  - Other common login options, like Facebook
+  - Develop for other devices/web
+
 Start with dummy prototypes for:
 
   - Drag-select on a list, show selections
