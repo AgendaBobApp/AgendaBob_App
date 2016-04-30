@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">SwipeFragmentTest</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment_a">Hello from Fragment A</string>
+    <string name="hello_blank_fragment_b">Hello from Fragment B</string>
+</resources>
