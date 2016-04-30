@@ -1,9 +1,16 @@
 <resources>
-    <string name="app_name">Project1</string>
+    <string name="app_name">Better Scheduler</string>
     <string name="action_settings">Settings</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="test_polls">
+        <item>Poll 1</item>
+        <item>Poll 2</item>
+        <item>Poll 3</item>
+        <item>Poll 4</item>
+        <item>Poll 5</item>
+    </string-array>
     <string-array name="test_participants">
         <item>Austin</item>
         <item>Will</item>

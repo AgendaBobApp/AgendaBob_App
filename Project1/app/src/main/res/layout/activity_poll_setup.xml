@@ -55,8 +55,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginParentRight="16dp"
-        android:layout_marginParentLeft="16dp"
         >
 
         <Button
