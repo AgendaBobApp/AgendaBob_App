@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
-public class PollSetupActivity extends Activity implements AdapterView.OnItemClickListener{
+public class PollSetupActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
     TextView tvPollName;
     TextView tvPollCreator;
     TextView tvPollParticipants;
@@ -28,20 +28,19 @@ public class PollSetupActivity extends Activity implements AdapterView.OnItemCli
         setContentView(R.layout.activity_poll_setup);
         Intent intent = getIntent();
         String pollName = intent.getStringExtra("PollName");
+        String pollCreator = intent.getStringExtra("PollCreator");
 
         tvPollName = (TextView) findViewById(R.id.tv_poll_name);
-
         tvPollName.setText(pollName);
         tvPollCreator = (TextView) findViewById(R.id.tv_poll_creator);
+        tvPollCreator.setText(pollCreator);
         tvPollParticipants = (TextView) findViewById(R.id.tv_list_description);
 
         btnRespond = (Button) findViewById(R.id.btn_respond);
         btnViewResults = (Button) findViewById(R.id.btn_view_results);
 
         lvParticipants = (ListView) findViewById(R.id.lv_participants);
-        ArrayAdapter adapter = ArrayAdapter.createFromResource(
-                this,R.array.test_participants, android.R.layout.simple_list_item_1);
-        lvParticipants.setAdapter(adapter);
+        lvParticipants.setAdapter(new ParticipantAdapter(this));
         lvParticipants.setOnItemClickListener(this);
     }
 
