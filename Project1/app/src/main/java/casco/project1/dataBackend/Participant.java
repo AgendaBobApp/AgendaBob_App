@@ -12,32 +12,42 @@ import java.util.Date;
  *      date participated
  *      participant's response
  */
-<<<<<<< HEAD:Project1/app/src/main/java/casco/project1/dataBackend/Participant.java
 public class Participant extends User {
     private String name;
     private Date date;      // date when created
     private Response response;
+
     Participant(String name, int imageIndex) {
         super(name, imageIndex);
         this.date = null;
         this.response = null;
     }
+
     Participant(String name, Date date, Response response) {
         super(name);
         this.date = date;
         this.response = response;
     }
+
     Participant(String name, int imageIndex, Date date, Response response) {
         super(name, imageIndex);
-=======
-public class Participants {
+    }
+
+    public Response getResponse() {
+        return response;
+    }
+
+    public String getUser() {
+        return name;
+    }
+}
+/*public class Participants {
     private User name;
     private Date date;      // date when created
     private Response response;
 
     Participants(User name, Date date, Response response) {
         this.name = name;
->>>>>>> a1807bda809d4008e4434797b0bf05b144c91f06:Project1/app/src/main/java/casco/project1/dataBackend/Participants.java
         this.date = date;
         this.response = response;
     }
@@ -53,4 +63,4 @@ public class Participants {
     public Response getResponse() {
         return response;
     }
-}
+}*/

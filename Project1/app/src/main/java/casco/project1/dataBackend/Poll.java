@@ -73,8 +73,8 @@ public class Poll {
     // get all users that have participated
     public List<User> allParticipants() {
         List<User> list = new LinkedList<User>();
-        for (Participants p : participants) {
-            list.add(p.getUser());
+        for (Participant p : participants) {
+            list.add(p);
         }
         return list;
     }
@@ -85,8 +85,8 @@ public class Poll {
     public Response participantResponse(User user) {
         List<Response> list = new ArrayList<Response>();
         list.add(baseTime);
-        for (Participants p : participants) {
-            if (p.getUser().getName().equals(user.getName())){
+        for (Participant p : participants) {
+            if (p.getName().equals(user.getName())){
                 list.add(p.getResponse());
             }
         }
