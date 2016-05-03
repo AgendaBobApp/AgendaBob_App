@@ -27,21 +27,6 @@ public class PollAdapter extends BaseAdapter {
     Context context;
     PollAdapter(Context c, TestPopulator data){
         context = c;
-//        list = new ArrayList<TempProfile>();
-//        Resources res = context.getResources();
-//        String[] polls = res.getStringArray(R.array.test_polls);
-//        String[] creators = res.getStringArray(R.array.test_participants);
-//        int[] images = {
-//                R.drawable.ic_person_red,
-//                R.drawable.ic_person_orange,
-//                R.drawable.ic_person_yellow,
-//                R.drawable.ic_person_green,
-//                R.drawable.ic_person_blue,
-//                R.drawable.ic_person_purple,
-//        };
-//        for (int i = 0; i < polls.length;i++){
-//            list.add(new TempProfile(i, polls[i],creators[i], images[i % images.length]));
-//        }
             polls = data.polls;
 
     }
