@@ -19,6 +19,7 @@
         android:layout_alignTop="@+id/iv_profile_icon"
         android:layout_alignParentEnd="true"
         android:layout_toEndOf="@+id/iv_profile_icon"
-        android:layout_alignBottom="@+id/iv_profile_icon" />
+        android:layout_alignBottom="@+id/iv_profile_icon"
+        android:layout_alignParentStart="false" />
 
 </RelativeLayout>
