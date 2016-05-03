@@ -48,13 +48,13 @@ public class TimeRange {
         else {
             if (startTime.before(tr.endTime)) {
                 if (endTime.before(tr.endTime)) {
-                    return new TimeRange(tr.startTime, endTime);
+                    return new TimeRange(startTime, endTime);
                 }
                 else {
-                    return new TimeRange(tr.startTime, tr.endTime);
+                    return new TimeRange(startTime, tr.endTime);
                 }
             }
         }
-        return null;
+        return null; //should this throw an exception instead?
     }
 }
