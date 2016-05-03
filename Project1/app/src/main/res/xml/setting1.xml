@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="Update" >
+        <CheckBoxPreference
+            android:key="pref_updateWifi"
+            android:title="Only Wifi"
+            android:summary="Wifi Summary"
+            android:defaultValue="true" />
+        <CheckBoxPreference
+            android:key="pref_updateAutomatic"
+            android:title="Auto Update"
+            android:summary="Auto Update Summary"
+            android:defaultValue="true" />
+        <ListPreference
+            android:key="pref_updateTimeout"
+            android:title="updateTimeout"
+            android:dialogTitle="updateTimeoutDialogTitle"
+            android:defaultValue="30"
+            android:dependency="pref_updateAutomatic"
+            />
+        <ListPreference
+            android:key="pref_updateFrequency"
+            android:title="updateFrequency"
+            android:dialogTitle="updateFrequencyDialogTitle"
+            android:dependency="pref_updateAutomatic"
+            android:defaultValue="5"
+            />
+        <CheckBoxPreference
+            android:key="pref_updateStartup"
+            android:title="updateOnStartup"
+            android:summary="updateOnStartupSummary"
+            android:defaultValue="true" />
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

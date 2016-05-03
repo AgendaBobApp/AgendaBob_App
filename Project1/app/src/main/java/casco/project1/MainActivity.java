@@ -14,7 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
-    ListView list;
+    ListView lvPolls;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,11 +34,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         });
 
 
-        list = (ListView) findViewById(R.id.lv_polls);
-        ArrayAdapter adapter = ArrayAdapter.createFromResource(
-                this,R.array.test_polls, android.R.layout.simple_list_item_1);
-        list.setAdapter(adapter);
-        list.setOnItemClickListener(this);
+        lvPolls = (ListView) findViewById(R.id.lv_polls);
+        lvPolls.setAdapter(new PollAdapter(this));
+        lvPolls.setOnItemClickListener(this);
     }
 
     @Override
@@ -57,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent settings_intent = new Intent(this, DisplayPreferences.class);
+            startActivity(settings_intent);
             return true;
         }
 
@@ -67,8 +67,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent= new Intent(this, PollSetupActivity.class);
         String[] pollName = getResources().getStringArray(R.array.test_polls);
+        String[] pollCreator = getResources().getStringArray(R.array.test_participants);
         //
         intent.putExtra("PollName", pollName[position]);
+        intent.putExtra("PollCreator", pollCreator[position]);
         startActivity(intent);
     }
 }

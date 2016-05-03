@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="main_label_textsize">36sp</dimen>
+    <!--dimen name="mcab_toolbar_elevation">4dp</dimen-->
+
+</resources>
