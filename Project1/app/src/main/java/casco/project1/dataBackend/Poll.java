@@ -69,4 +69,27 @@ public class Poll {
         Response response = new Response(list);
         return response;
     }
+
+    // get all users that have participated
+    public List<User> allParticipants() {
+        List<User> list = new LinkedList<User>();
+        for (Participants p : participants) {
+            list.add(p.getUser());
+        }
+        return list;
+    }
+
+    // get a response for a particular user
+    // the user's response is combined with the bastTime
+    // may need to be edited
+    public Response participantResponse(User user) {
+        List<Response> list = new ArrayList<Response>();
+        list.add(baseTime);
+        for (Participants p : participants) {
+            if (p.getUser().getName().equals(user.getName())){
+                list.add(p.getResponse());
+            }
+        }
+        return new Response(list);
+    }
 }

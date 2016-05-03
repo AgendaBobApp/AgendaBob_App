@@ -13,17 +13,17 @@ import java.util.Date;
  *      participant's response
  */
 public class Participants {
-    private String name;
+    private User name;
     private Date date;      // date when created
     private Response response;
 
-    Participants(String name, Date date, Response response) {
+    Participants(User name, Date date, Response response) {
         this.name = name;
         this.date = date;
         this.response = response;
     }
 
-    public String getName() {
+    public User getUser() {
         return name;
     }
 
