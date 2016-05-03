@@ -6,7 +6,7 @@ package casco.project1.dataBackend;
 
 import android.util.TimeUtils;
 
-import java.util.Date
+import java.util.Date;
 
 /**
  * has start stop times for a given date

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <header
+        android:fragment="casco.project1.FirstSettingFragment"
+        android:title="Setting 1"
+        android:summary="Stuff" >
+    </header>
+
+</preference-headers>
