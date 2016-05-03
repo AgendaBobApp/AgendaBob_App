@@ -6,7 +6,7 @@ package casco.project1.dataBackend;
 
 import android.util.TimeUtils;
 
-import java.util.Date
+import java.util.Date;
 
 /**
  * has start stop times for a given date
@@ -48,13 +48,13 @@ public class TimeRange {
         else {
             if (startTime.before(tr.endTime)) {
                 if (endTime.before(tr.endTime)) {
-                    return new TimeRange(tr.startTime, endTime);
+                    return new TimeRange(startTime, endTime);
                 }
                 else {
-                    return new TimeRange(tr.startTime, tr.endTime);
+                    return new TimeRange(startTime, tr.endTime);
                 }
             }
         }
-        return null;
+        return null; //should this throw an exception instead?
     }
 }

@@ -24,14 +24,43 @@ public class Response {
 
     Response (Set<TimeRange> times) {
         // create a response based on provided time ranges
-        this.times = new TreeSet<TimeRange>(times);
+        this.times = new TreeSet<TimeRange>(times); // need to error check
     }
 
     Response (List<Response> responses) {
         // create a response that is a composite of other responses
-        this.times = new TreeSet<TimeRange>();
-        for (Response r: responses) {
-            this.times.addAll(r.getTimes()); // probaby wrong thing but you get idea
+
+        if (responses == null || responses.size() < 1) {
+            // throw an exception or something this is not good
+            this.times = new TreeSet<TimeRange>();
+        }
+        else if (responses.size() == 1) {
+            this.times = new TreeSet<TimeRange>(responses.get(0).getTimes());
+        }
+        else {
+            // put one response into times to test against
+            this.times = new TreeSet<TimeRange>(responses.get(0).getTimes()); // need to error check
+            // dont need to test against it again
+            responses.remove(0);
+
+            // hold the intersected TimeRanges to reset times with
+            Set<TimeRange> reset = new TreeSet<TimeRange>();
+
+            // get a response
+            for (Response r : responses) {
+                // get all the time ranges for that response
+                for (TimeRange tr : r.getTimes()) {
+                    // find the intersections that we want to keep
+                    for (TimeRange time : times) {
+                        TimeRange add = time.interects(tr);
+                        if (add != null) {
+                            reset.add(add);
+                        }
+                    }
+                }
+                this.times = reset;
+                reset = new TreeSet<TimeRange>();
+            }
         }
     }
 
