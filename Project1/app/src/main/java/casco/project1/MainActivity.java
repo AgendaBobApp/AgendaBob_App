@@ -13,8 +13,15 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.List;
+
+import casco.project1.dataBackend.Poll;
+import casco.project1.dataBackend.TestPopulator;
+
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
     ListView lvPolls;
+    List<Poll> polls;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,11 +40,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
-
+        TestPopulator data = new TestPopulator();
+        polls = data.polls;
         lvPolls = (ListView) findViewById(R.id.lv_polls);
-        lvPolls.setAdapter(new PollAdapter(this));
+        lvPolls.setAdapter(new PollAdapter(this, data));
         lvPolls.setOnItemClickListener(this);
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -66,11 +76,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent= new Intent(this, PollSetupActivity.class);
-        String[] pollName = getResources().getStringArray(R.array.test_polls);
-        String[] pollCreator = getResources().getStringArray(R.array.test_participants);
+//        String[] pollName = getResources().getStringArray(R.array.test_polls);
+//        String[] pollCreator = getResources().getStringArray(R.array.test_participants);
         //
-        intent.putExtra("PollName", pollName[position]);
-        intent.putExtra("PollCreator", pollCreator[position]);
+
+        intent.putExtra("PollName", polls.get(position).getTitle());
+        intent.putExtra("PollCreator", polls.get(position).getCreator().getName());
         startActivity(intent);
     }
 }

@@ -12,13 +12,22 @@ import java.util.Date;
  *      date participated
  *      participant's response
  */
-public class Participants {
+public class Participant extends User {
     private String name;
     private Date date;      // date when created
     private Response response;
-
-    Participants(String name, Date date, Response response) {
-        this.name = name;
+    Participant(String name, int imageIndex) {
+        super(name, imageIndex);
+        this.date = null;
+        this.response = null;
+    }
+    Participant(String name, Date date, Response response) {
+        super(name);
+        this.date = date;
+        this.response = response;
+    }
+    Participant(String name, int imageIndex, Date date, Response response) {
+        super(name, imageIndex);
         this.date = date;
         this.response = response;
     }

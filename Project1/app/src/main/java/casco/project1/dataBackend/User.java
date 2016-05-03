@@ -10,16 +10,25 @@ package casco.project1.dataBackend;
  */
 public class User {
     private String name;
+    private int imageIndex;
 
     User() {
         this.name = "William Olsen";
     }
 
     User(String name) {
+        imageIndex = 1;
+        this.name = name;
+    }
+    User(String name, int imageIndex) {
+        this.imageIndex = imageIndex;
         this.name = name;
     }
 
     public String getName() {
         return name;
+    }
+    public int getImage() {
+        return imageIndex;
     }
 }

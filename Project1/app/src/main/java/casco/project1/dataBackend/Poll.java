@@ -13,7 +13,7 @@ public class Poll {
     private String title; // name of the poll
     private String description; // description of the poll
     private Response baseTime; // times that participants can select from
-    private List<Participants> participants;
+    private List<Participant> participants;
 
     Poll() {
         this.shortCode = 12345;
@@ -21,10 +21,10 @@ public class Poll {
         this.title = "A Really Bad Title";
         this.description = "An instance of Poll that really should not be here!";
         this.baseTime = new Response();
-        this.participants = new ArrayList<Participants>();
+        this.participants = new ArrayList<Participant>();
     }
 
-    Poll(int shortCode, User creator, String title, String description, Response baseTime, List<Participants> participants) {
+    Poll(int shortCode, User creator, String title, String description, Response baseTime, List<Participant> participants) {
         this.shortCode = shortCode;
         this.creator = creator;
         this.title = title;
@@ -54,7 +54,7 @@ public class Poll {
     }
 
     // This really should be changed to give only one participant? maybe... IDK...
-    public List<Participants> getParticipants() {
+    public List<Participant> getParticipants() {
         return participants;
     }
 
@@ -62,7 +62,7 @@ public class Poll {
     public Response combinedResponse()  {
         List<Response> list = new LinkedList<Response>();
         list.add(baseTime);
-        for (Participants p : participants) {
+        for (Participant p : participants) {
             list.add(p.getResponse());
         }
 
