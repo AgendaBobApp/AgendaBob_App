@@ -35,7 +35,7 @@
         android:layout_height="64dp"
         android:src="@android:drawable/ic_menu_add"
         app:elevation="5dp"
-        app:backgroundTint="?attr/colorPrimary"
+        app:backgroundTint="?attr/colorAccent"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
