@@ -3,4 +3,8 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="grid_label_text_normal">#FFF</color>
+    <color name="grid_label_text_selected">#B3FFFFFF</color>
+    <color name="grid_foreground_selected">#B3000000</color>
 </resources>
