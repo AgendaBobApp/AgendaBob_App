@@ -1,7 +1,10 @@
 package casco.project1.dataBackend;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import casco.project1.R;
 
@@ -14,7 +17,7 @@ public class TestPopulator {
     int userID = 0;
     int partID = 0;
     public List<User> users = new ArrayList<User>();
-    public List<Participant> participants = new ArrayList<Participant>();
+    public List<Response> participants = new ArrayList<Response>();
     public List<Poll> polls = new ArrayList<Poll>();
     String[] userNames = {"Austin", "Christian", "Jonathon", "Stefan", "William"};
     String[] pollNames = {"Learn Japanese", "Political Discussion",
@@ -52,7 +55,7 @@ public class TestPopulator {
         userID++;
     }
     public void createParticipant(){
-        participants.add(new Participant(userNames[partID % userNames.length], images[partID % images.length]));
+        participants.add(new Response(new TreeSet<TimeRange>(), new User(userNames[partID % userNames.length], images[partID % images.length]), new Date()));
         partID++;
     }
 }

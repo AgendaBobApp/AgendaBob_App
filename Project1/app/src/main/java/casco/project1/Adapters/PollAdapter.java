@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import casco.project1.R;
-import casco.project1.dataBackend.Participant;
+import casco.project1.dataBackend.Response;
 import casco.project1.dataBackend.Poll;
 import casco.project1.dataBackend.TestPopulator;
 import casco.project1.dataBackend.User;
@@ -23,7 +23,7 @@ import casco.project1.dataBackend.User;
  */
 public class PollAdapter extends BaseAdapter {
     List<User> users;
-    List<Participant> participants;
+    List<Response> participants;
     List<Poll> polls;
     Context context;
     public PollAdapter(Context c, TestPopulator data){
