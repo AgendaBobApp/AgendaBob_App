@@ -6,12 +6,13 @@ package casco.project1.dataBackend;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * place holder class for a User
  * not really sure what all needs to be in here
  */
-public class User {
+public class User implements Serializable{
     private String name;
     private int imageIndex;
 
