@@ -13,6 +13,11 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+
 import java.util.List;
 
 import casco.project1.DisplayPreferences;
@@ -56,6 +61,23 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         lvPolls.setOnItemClickListener(this);
         Bundle bundle = this.getIntent().getExtras();
         loadUser(bundle);
+
+        GoogleApiClient.OnConnectionFailedListener listen = new GoogleApiClient.OnConnectionFailedListener() {
+            @Override
+            public void onConnectionFailed(ConnectionResult connectionResult) {
+
+            }
+        };
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, listen /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+        int RC_SIGN_IN = 888;
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
 
     }
     public void loadUser(Bundle bundle){
