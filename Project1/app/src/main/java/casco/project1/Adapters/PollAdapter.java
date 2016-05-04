@@ -1,4 +1,4 @@
-package casco.project1;
+package casco.project1.Adapters;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -12,6 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import casco.project1.R;
 import casco.project1.dataBackend.Participant;
 import casco.project1.dataBackend.Poll;
 import casco.project1.dataBackend.TestPopulator;
@@ -25,9 +26,9 @@ public class PollAdapter extends BaseAdapter {
     List<Participant> participants;
     List<Poll> polls;
     Context context;
-    PollAdapter(Context c, TestPopulator data){
+    public PollAdapter(Context c, TestPopulator data){
         context = c;
-            polls = data.polls;
+        polls = data.polls;
 
     }
     @Override

@@ -1,18 +1,21 @@
-package casco.project1;
+package casco.project1.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.List;
+import casco.project1.Adapters.ParticipantAdapter;
+import casco.project1.R;
+import casco.project1.dataBackend.Constants;
+import casco.project1.dataBackend.User;
 
 public class PollSetupActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
     TextView tvPollName;
@@ -21,6 +24,8 @@ public class PollSetupActivity extends AppCompatActivity implements AdapterView.
     ListView lvParticipants;
     Button btnRespond;
     Button btnViewResults;
+    TextView test;
+    User currentuser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +34,8 @@ public class PollSetupActivity extends AppCompatActivity implements AdapterView.
         Intent intent = getIntent();
         String pollName = intent.getStringExtra("PollName");
         String pollCreator = intent.getStringExtra("PollCreator");
+        Bundle bundle = this.getIntent().getExtras();
+        loadUser(bundle);
 
         tvPollName = (TextView) findViewById(R.id.tv_poll_name);
         tvPollName.setText(pollName);
@@ -42,6 +49,20 @@ public class PollSetupActivity extends AppCompatActivity implements AdapterView.
         lvParticipants = (ListView) findViewById(R.id.lv_participants);
         lvParticipants.setAdapter(new ParticipantAdapter(this));
         lvParticipants.setOnItemClickListener(this);
+    }
+    public void loadUser(Bundle bundle){
+        if (bundle != null) {
+            currentuser = (User) bundle.getSerializable(Constants.UserBundleKey);
+            Log.i("STEFAN", "User passed from other activity");
+        }
+        else
+        {
+            currentuser = new User();
+            Log.i("STEFAN", "User RECREATED");
+        }
+        test = (TextView) findViewById(R.id.tvTest);
+        test.setText("Logged in as: "+currentuser.getName());
+        Log.i("STEFAN", currentuser.getName());
     }
 
     @Override

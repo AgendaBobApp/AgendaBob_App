@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".Activities.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -21,19 +21,25 @@
         <activity
             android:name=".DisplayPreferences"
             android:label="Preferences"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".Activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="casco.project1.MainActivity" />
+                android:value=".Activities.MainActivity" />
         </activity>
-        <activity android:name=".PollSetupActivity"></activity>
-        <activity android:name=".PollCreationActivity"></activity>
-        <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
-     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <activity android:name=".Activities.PollSetupActivity" />
+        <activity
+            android:name=".Activities.PollCreationActivityOld"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <!--
+     ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
+        <activity android:name=".Activities.PollCreationActivity"></activity>
     </application>
 
 </manifest>

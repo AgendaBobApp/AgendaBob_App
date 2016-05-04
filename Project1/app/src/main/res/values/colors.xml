@@ -4,7 +4,11 @@
     <color name="colorPrimaryDark">#1b4353</color>
     <color name="colorAccent">#2892d7</color>
 
-    <color name="grid_label_text_normal">#FFF</color>
-    <color name="grid_label_text_selected">#B3FFFFFF</color>
-    <color name="grid_foreground_selected">#B3000000</color>
+    <color name="grid_label_text_normal">#000</color>
+    <color name="grid_label_text_selected">#fff</color>
+    <color name="grid_foreground_normal">#bbb</color>
+    <color name="grid_foreground_selected">#080</color>
+    <color name="grid_background_normal">#333</color>
+    <color name="grid_background_selected">#666</color>
+
 </resources>

@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:padding="4dp">
 
-    <casco.dragselectpoc.RectangleView
+    <casco.project1.dataBackend.RectangleView
         android:id="@+id/colorSquare"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,12 +18,11 @@
             android:layout_gravity="center"
             android:fontFamily="sans-serif-medium"
             android:gravity="center"
-            android:textColor="#fff"
-            android:textSize="@dimen/main_label_textsize"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:textStyle="bold|italic"
             tools:ignore="UnusedAttribute"
             tools:text="A" />
 
-    </casco.dragselectpoc.RectangleView>
+    </casco.project1.dataBackend.RectangleView>
 
 </FrameLayout>

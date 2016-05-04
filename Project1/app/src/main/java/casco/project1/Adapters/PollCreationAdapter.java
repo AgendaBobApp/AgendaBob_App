@@ -1,4 +1,4 @@
-package casco.project1;
+package casco.project1.Adapters;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -13,6 +13,9 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.afollestad.dragselectrecyclerview.DragSelectRecyclerViewAdapter;
+
+import casco.project1.R;
+import casco.project1.dataBackend.RectangleView;
 
 /**
  * Created by christianmello on 5/3/16.

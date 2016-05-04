@@ -1,4 +1,4 @@
-package casco.project1;
+package casco.project1.Adapters;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -11,15 +11,19 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import casco.project1.R;
+import casco.project1.TempProfile;
+import casco.project1.dataBackend.User;
+
 /**
  * Created by Stefan on 4/30/2016.
  */
 public class ParticipantAdapter extends BaseAdapter {
-    ArrayList<TempProfile> list;
+    ArrayList<User> list;
     Context context;
-    ParticipantAdapter(Context c){
+    public ParticipantAdapter(Context c){
         context = c;
-        list = new ArrayList<TempProfile>();
+        list = new ArrayList<User>();
         Resources res = context.getResources();
         String[] polls = res.getStringArray(R.array.test_polls);
         String[] creators = res.getStringArray(R.array.test_participants);
@@ -32,8 +36,7 @@ public class ParticipantAdapter extends BaseAdapter {
                 R.drawable.ic_person_purple,
         };
         for (int i = 0; i < polls.length;i++){
-            list.add(new TempProfile(i, polls[i],creators[i],
-                    images[i % images.length]));
+            list.add(new User());
         }
 
 
@@ -54,7 +57,7 @@ public class ParticipantAdapter extends BaseAdapter {
     @Override
     public long getItemId(int position) {
 
-        return list.get(position).getId();
+        return list.get(position).getImage();
     }
 
 
@@ -68,8 +71,8 @@ public class ParticipantAdapter extends BaseAdapter {
         TextView creator = (TextView) row.findViewById(R.id.tv_row_poll_creator);
         ImageView image = (ImageView) row.findViewById(R.id.iv_profile_icon);
         //poll.setText(list.get(position).getPoll());
-        creator.setText(list.get(position).getCreator());
-        image.setImageResource(list.get(position).getImageIndex());
+        creator.setText(list.get(position).getName());
+        image.setImageResource(list.get(position).getImage());
         return row;
     }
 }

@@ -24,14 +24,14 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
 
-    compile 'com.android.support:appcompat-v7:23.3.0'
-    compile 'com.android.support:design:23.3.0'
-    compile 'com.google.android.gms:play-services-auth:8.3.0'
-    compile 'com.android.support:support-v4:23.3.0'
     compile('com.github.afollestad:material-cab:0.1.11@aar') {
         transitive = true
     }
     compile('com.github.afollestad:drag-select-recyclerview:0.3.5@aar') {
         transitive = true
     }
+    compile 'com.android.support:appcompat-v7:23.3.0'
+    compile 'com.android.support:design:23.3.0'
+    compile 'com.google.android.gms:play-services-auth:8.3.0'
+    compile 'com.android.support:support-v4:23.3.0'
 }

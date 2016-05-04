@@ -1,4 +1,4 @@
-package casco.project1;
+package casco.project1.Fragments;
 
 
 import android.app.Fragment;
@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import casco.project1.R;
 
 
 public class WeekDayFragment extends Fragment {

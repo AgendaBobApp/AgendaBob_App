@@ -1,5 +1,6 @@
 package casco.project1.dataBackend;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -7,7 +8,7 @@ import java.util.List;
 /**
  * Created by Baron on 4/30/2016.
  */
-public class Poll {
+public class Poll implements Serializable{
     private int shortCode; // id for the poll
     private User creator; // user that created the poll
     private String title; // name of the poll
@@ -15,7 +16,7 @@ public class Poll {
     private Response baseTime; // times that participants can select from
     private List<Participant> participants;
 
-    Poll() {
+    public Poll() {
         this.shortCode = 12345;
         this.creator = new User("FooBar");
         this.title = "A Really Bad Title";
@@ -24,7 +25,7 @@ public class Poll {
         this.participants = new ArrayList<Participant>();
     }
 
-    Poll(int shortCode, User creator, String title, String description, Response baseTime, List<Participant> participants) {
+    public Poll(int shortCode, User creator, String title, String description, Response baseTime, List<Participant> participants) {
         this.shortCode = shortCode;
         this.creator = creator;
         this.title = title;
