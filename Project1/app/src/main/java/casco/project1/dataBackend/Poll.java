@@ -1,5 +1,7 @@
 package casco.project1.dataBackend;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,6 +33,19 @@ public class Poll {
         this.description = description;
         this.baseTime = baseTime;
         this.participants = participants;
+    }
+
+    public void serialize(DataOutputStream dos) throws IOException {
+        dos.writeInt(getShortCode());
+        creator.serialize(dos);
+        dos.writeUTF(getTitle());
+        dos.writeUTF(getDescription());
+        baseTime.serialize(dos);
+        dos.writeInt(participants.size()); // so you know how many elements in the list
+        for (Participant p : participants) {
+            p.serialize(dos);
+        }
+        dos.flush();
     }
 
     public int getShortCode() {

@@ -4,6 +4,9 @@ package casco.project1.dataBackend;
  * Created by Baron on 5/2/2016.
  */
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 /**
  * place holder class for a User
  * not really sure what all needs to be in here
@@ -30,5 +33,11 @@ public class User {
     }
     public int getImage() {
         return imageIndex;
+    }
+
+    public void serialize(DataOutputStream dos) throws IOException{
+        dos.writeUTF(getName());
+        dos.writeInt(getImage());
+        dos.flush();
     }
 }

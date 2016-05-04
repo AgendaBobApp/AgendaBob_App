@@ -1,5 +1,7 @@
 package casco.project1.dataBackend;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -31,6 +33,14 @@ public class Participant extends User {
 
     Participant(String name, int imageIndex, Date date, Response response) {
         super(name, imageIndex);
+    }
+
+    @Override
+    public void serialize(DataOutputStream dos) throws IOException {
+        super.serialize(dos);
+        dos.writeLong(date.getTime()); // write the data as a long
+        response.serialize(dos);
+        dos.flush();
     }
 
     public Response getResponse() {
