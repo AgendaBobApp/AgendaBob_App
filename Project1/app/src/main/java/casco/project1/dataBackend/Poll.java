@@ -1,5 +1,8 @@
 package casco.project1.dataBackend;
 
+
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -13,8 +16,8 @@ public class Poll implements Serializable{
     private User creator; // user that created the poll
     private String title; // name of the poll
     private String description; // description of the poll
-    private Response baseTime; // times that participants can select from
-    private List<Participant> participants;
+    private TimeSet baseTime; // times that participants can select from
+    private List<Response> responses;
 
     public Poll() {
         this.shortCode = 12345;
@@ -22,16 +25,30 @@ public class Poll implements Serializable{
         this.title = "A Really Bad Title";
         this.description = "An instance of Poll that really should not be here!";
         this.baseTime = new Response();
-        this.participants = new ArrayList<Participant>();
+        this.responses = new ArrayList<Response>();
     }
 
-    public Poll(int shortCode, User creator, String title, String description, Response baseTime, List<Participant> participants) {
+    public Poll(int shortCode, User creator, String title, String description, Response baseTime, List<Response> responses) {
+
         this.shortCode = shortCode;
         this.creator = creator;
         this.title = title;
         this.description = description;
         this.baseTime = baseTime;
-        this.participants = participants;
+        this.responses = responses;
+    }
+
+    public void serialize(DataOutputStream dos) throws IOException {
+        dos.writeInt(getShortCode());
+        creator.serialize(dos);
+        dos.writeUTF(getTitle());
+        dos.writeUTF(getDescription());
+        baseTime.serialize(dos);
+        dos.writeInt(responses.size()); // so you know how many elements in the list
+        for (Response r : responses) {
+            r.serialize(dos);
+        }
+        dos.flush();
     }
 
     public int getShortCode() {
@@ -50,32 +67,32 @@ public class Poll implements Serializable{
         return description;
     }
 
-    public Response getBaseTime() {
+    public TimeSet getBaseTime() {
         return baseTime;
     }
 
     // This really should be changed to give only one participant? maybe... IDK...
-    public List<Participant> getParticipants() {
-        return participants;
+    public List<Response> getResponses() {
+        return responses;
     }
 
     // return the combined response of all participants
-    public Response combinedResponse()  {
-        List<Response> list = new LinkedList<Response>();
+    public TimeSet combinedResponse()  {
+        List<TimeSet> list = new LinkedList<TimeSet>();
         list.add(baseTime);
-        for (Participant p : participants) {
-            list.add(p.getResponse());
+        for (Response r : responses) {
+            list.add(r);
         }
 
-        Response response = new Response(list);
+        TimeSet response = new TimeSet(list);
         return response;
     }
 
     // get all users that have participated
     public List<User> allParticipants() {
         List<User> list = new LinkedList<User>();
-        for (Participant p : participants) {
-            list.add(p);
+        for (Response r : responses) {
+            list.add(r.getCreator());
         }
         return list;
     }
@@ -83,14 +100,14 @@ public class Poll implements Serializable{
     // get a response for a particular user
     // the user's response is combined with the bastTime
     // may need to be edited
-    public Response participantResponse(User user) {
-        List<Response> list = new ArrayList<Response>();
+    public TimeSet participantResponse(User user) {
+        List<TimeSet> list = new ArrayList<TimeSet>();
         list.add(baseTime);
-        for (Participant p : participants) {
-            if (p.getName().equals(user.getName())){
-                list.add(p.getResponse());
+        for (Response r : responses) {
+            if (r.getCreator().getName().equals(user.getName())){
+                list.add(r);
             }
         }
-        return new Response(list);
+        return new TimeSet(list);
     }
 }

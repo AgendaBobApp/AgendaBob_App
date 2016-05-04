@@ -6,6 +6,8 @@ package casco.project1.dataBackend;
 
 import android.util.TimeUtils;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -56,5 +58,11 @@ public class TimeRange {
             }
         }
         return null; //should this throw an exception instead?
+    }
+
+    public void serialize(DataOutputStream dos) throws IOException {
+        dos.writeLong(startTime.getTime()); // write the data as a long
+        dos.writeLong(endTime.getTime()); // write the data as a long
+        dos.flush();
     }
 }
