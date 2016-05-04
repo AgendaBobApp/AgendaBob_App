@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent settings_intent = new Intent(this, DisplayPreferences.class);
-            saveUser(settings_intent);
+            //saveUser(settings_intent);
             startActivity(settings_intent);
             return true;
         }

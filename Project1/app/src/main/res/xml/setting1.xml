@@ -12,7 +12,7 @@
             android:title="Auto Update"
             android:summary="Auto Update Summary"
             android:defaultValue="true" />
-        <ListPreference
+        <!--<ListPreference
             android:key="pref_updateTimeout"
             android:title="updateTimeout"
             android:dialogTitle="updateTimeoutDialogTitle"
@@ -25,7 +25,7 @@
             android:dialogTitle="updateFrequencyDialogTitle"
             android:dependency="pref_updateAutomatic"
             android:defaultValue="5"
-            />
+            />-->
         <CheckBoxPreference
             android:key="pref_updateStartup"
             android:title="updateOnStartup"
