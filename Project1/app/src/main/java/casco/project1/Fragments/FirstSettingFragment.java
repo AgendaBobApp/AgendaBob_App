@@ -1,12 +1,15 @@
-package casco.project1;
+package casco.project1.Fragments;
+
 import android.preference.PreferenceFragment;
 import android.os.Bundle;
 
-public class SecondSettingFragment extends PreferenceFragment {
+import casco.project1.R;
+
+public class FirstSettingFragment extends PreferenceFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.setting2);
+        addPreferencesFromResource(R.xml.setting1);
     }
 }

@@ -31,11 +31,12 @@ public class PollCreationActivity extends AppCompatActivity
 {
     FragmentManager manager;
     Poll newPoll;
-    String pollName;
-    String pollDescription;
     Button btnNext;
     User currentUser;
     TextView test;
+
+    String pollName;
+    String pollDescription;
 
 
 
@@ -77,6 +78,7 @@ public class PollCreationActivity extends AppCompatActivity
         FragmentTransaction trans = manager.beginTransaction();
         trans.replace(R.id.group, fragPart1, "Part1");
         trans.commit();
+        fragPart1.setPollNameAndDescription(pollName, pollDescription);
     }
     public void loadPart2(){
         Log.i("STEFAN", "loadPart2");
@@ -85,6 +87,7 @@ public class PollCreationActivity extends AppCompatActivity
         FragmentTransaction trans = manager.beginTransaction();
         trans.replace(R.id.group, fragPart2, "Part2");
         trans.commit();
+        fragPart2.setPollNameAndDescription(pollName, pollDescription);
     }
     public void loadPart3(){
         Log.i("STEFAN", "loadPart3");

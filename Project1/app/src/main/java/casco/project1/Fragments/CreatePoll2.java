@@ -15,10 +15,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.afollestad.dragselectrecyclerview.DragSelectRecyclerView;
 import com.afollestad.dragselectrecyclerview.DragSelectRecyclerViewAdapter;
 import com.afollestad.materialcab.MaterialCab;
+
+import org.w3c.dom.Text;
 
 import casco.project1.Adapters.DragSelectRecyclerAdapter;
 import casco.project1.Interfaces.ClickListener;
@@ -32,6 +35,9 @@ import casco.project1.R;
 public class CreatePoll2 extends Fragment
         implements View.OnClickListener, DragSelectRecyclerViewAdapter.SelectionListener
 {
+    TextView tvPollName;
+    String pollName;
+    String pollDecription;
     Button btnBack;
     Button btnNext;
     DragSelectRecyclerView dsrvDays;
@@ -49,6 +55,10 @@ public class CreatePoll2 extends Fragment
     {
         listener = l;
     }
+    public void setPollNameAndDescription(String name, String desc){
+        pollName = name;
+        pollDecription = desc;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,6 +72,9 @@ public class CreatePoll2 extends Fragment
         super.onActivityCreated(savedInstanceState);
         comm = (Communicator) getActivity();
         listener = (ClickListener) getActivity();
+
+        tvPollName = (TextView) getActivity().findViewById(R.id.tvPollName);
+
         dsraAdapter = new DragSelectRecyclerAdapter((ClickListener) getActivity());
         dsraAdapter.load();
         dsraAdapter.setSelectionListener(this);
@@ -80,9 +93,8 @@ public class CreatePoll2 extends Fragment
         btnBack.setOnClickListener(this);
         btnNext = (Button) getActivity().findViewById(R.id.btnPart3);
         btnNext.setOnClickListener(this);
-        if (btnNext  == null){
-            Log.i("STEFAN", "FAILED TO LOAD BUTTON");
-        }
+        btnNext.setEnabled(false);
+        tvPollName.setText(pollName);
     }
 
     public DragSelectRecyclerView getDragSelectRecyclerView(){
@@ -93,7 +105,10 @@ public class CreatePoll2 extends Fragment
     }
     @Override
     public void onDragSelectionChanged(int i) {
-
+        Log.i("STEFAN", "NUM ITEMS OR ITEM SELECTED?: "+i);
+        if(i > 0){
+            btnNext.setEnabled(true);
+        }
     }
 
     @Override
