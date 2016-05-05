@@ -36,8 +36,8 @@ public class CreatePoll2 extends Fragment
         implements View.OnClickListener, DragSelectRecyclerViewAdapter.SelectionListener
 {
     TextView tvPollName;
-    String pollName;
-    String pollDecription;
+    public String pollName;
+    public String pollDecription;
     Button btnBack;
     Button btnNext;
     DragSelectRecyclerView dsrvDays;
@@ -64,6 +64,7 @@ public class CreatePoll2 extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         return inflater.inflate(R.layout.fragment_create_poll2, container, false);
     }
 
@@ -72,9 +73,7 @@ public class CreatePoll2 extends Fragment
         super.onActivityCreated(savedInstanceState);
         comm = (Communicator) getActivity();
         listener = (ClickListener) getActivity();
-
-        tvPollName = (TextView) getActivity().findViewById(R.id.tvPollName);
-
+        tvPollName = (TextView) getActivity().findViewById(R.id.tvPollName2);
         dsraAdapter = new DragSelectRecyclerAdapter((ClickListener) getActivity());
         dsraAdapter.load();
         dsraAdapter.setSelectionListener(this);
@@ -94,7 +93,17 @@ public class CreatePoll2 extends Fragment
         btnNext = (Button) getActivity().findViewById(R.id.btnPart3);
         btnNext.setOnClickListener(this);
         btnNext.setEnabled(false);
-        tvPollName.setText(pollName);
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if(tvPollName != null && (pollName != null || pollName != "")) {
+            tvPollName.setText(pollName);
+        }
+        else{
+            Log.e("STEFAN", "TEXT VIEW STILL NOT LOADED");
+        }
     }
 
     public DragSelectRecyclerView getDragSelectRecyclerView(){

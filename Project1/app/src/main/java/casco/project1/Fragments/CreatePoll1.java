@@ -25,8 +25,8 @@ public class CreatePoll1 extends Fragment implements View.OnClickListener {
     TextView tvPollDescription;
     EditText tePollDescription;
     Button btnNext;
-    String newPollName;
-    String newPollDescription;
+    public String newPollName;
+    public String newPollDescription;
 
     public void setCommunicator(Communicator c)
     {
@@ -40,8 +40,8 @@ public class CreatePoll1 extends Fragment implements View.OnClickListener {
         return inflater.inflate(R.layout.fragment_create_poll1, container, false);
     }
     public void setPollNameAndDescription(String name, String desc){
-        tePollTitle.setText(name);
-        tePollDescription.setText(desc);
+        newPollName = name;
+        newPollDescription = desc;
     }
 
     @Override
@@ -74,6 +74,14 @@ public class CreatePoll1 extends Fragment implements View.OnClickListener {
         if (btnNext  == null){
             Log.i("STEFAN", "FAILED TO LOAD BUTTON");
         }
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        tePollTitle.setText(newPollName);
+        tePollDescription.setText(newPollDescription);
     }
 
     @Override
@@ -82,7 +90,7 @@ public class CreatePoll1 extends Fragment implements View.OnClickListener {
         Log.i("STEFAN", "Clicked");
         newPollName = tePollTitle.getText().toString();
         newPollDescription = tePollDescription.getText().toString();
-        comm.switchToPart2();
+        comm.switchToPart2(newPollName, newPollDescription);
     }
 
 }

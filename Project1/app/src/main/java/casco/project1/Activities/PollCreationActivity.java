@@ -50,15 +50,7 @@ public class PollCreationActivity extends AppCompatActivity
         addPart1();
     }
     public void loadUser(Bundle bundle){
-        if (bundle != null) {
-            currentUser = (User) bundle.getSerializable(Constants.UserBundleKey);
-            Log.i("STEFAN", "User passed from other activity");
-        }
-        else
-        {
-            currentUser = new User();
-            Log.i("STEFAN", "User RECREATED");
-        }
+        currentUser = Constants.loadUser(bundle);
         test = (TextView) findViewById(R.id.tvTest);
         test.setText("Logged in as: " + currentUser.getName());
         Log.i("STEFAN", currentUser.getName());
@@ -74,20 +66,24 @@ public class PollCreationActivity extends AppCompatActivity
     public void loadPart1(){
         Log.i("STEFAN", "loadPart1");
         CreatePoll1 fragPart1 = new CreatePoll1();
+        Log.i("STEFAN", "SHOULD BE "+fragPart1.newPollName);
         //fragPart1.setCommunicator(this);
+        fragPart1.setPollNameAndDescription(pollName, pollDescription);
         FragmentTransaction trans = manager.beginTransaction();
         trans.replace(R.id.group, fragPart1, "Part1");
         trans.commit();
-        fragPart1.setPollNameAndDescription(pollName, pollDescription);
+
     }
     public void loadPart2(){
         Log.i("STEFAN", "loadPart2");
         CreatePoll2 fragPart2 = new CreatePoll2();
+        fragPart2.setPollNameAndDescription(pollName, pollDescription);
+        Log.i("STEFAN", "SHOULD BE "+fragPart2.pollName);
         //fragPart2.setCommunicator(this);
         FragmentTransaction trans = manager.beginTransaction();
         trans.replace(R.id.group, fragPart2, "Part2");
         trans.commit();
-        fragPart2.setPollNameAndDescription(pollName, pollDescription);
+
     }
     public void loadPart3(){
         Log.i("STEFAN", "loadPart3");
@@ -100,13 +96,23 @@ public class PollCreationActivity extends AppCompatActivity
     @Override
     public void switchToPart1() {
         Log.i("STEFAN", "switchToPart1");
+
         loadPart1();
     }
+    @Override
+    public void switchToPart2(String newPollName, String newPollDescription) {
+        Log.i("STEFAN", "switchToPart2");
+        pollName = newPollName;
+        pollDescription = newPollDescription;
+        loadPart2();
+    }
+
     @Override
     public void switchToPart2() {
         Log.i("STEFAN", "switchToPart2");
         loadPart2();
     }
+
     @Override
     public void switchToPart3() {
         Log.i("STEFAN", "switchToPart3");

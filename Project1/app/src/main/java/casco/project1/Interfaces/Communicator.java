@@ -8,6 +8,7 @@ import android.view.View;
 public interface Communicator {
     public void switchToPart1();
 
+    public void switchToPart2(String newPollName, String newPollDescription);
     public void switchToPart2();
 
     public void switchToPart3();
