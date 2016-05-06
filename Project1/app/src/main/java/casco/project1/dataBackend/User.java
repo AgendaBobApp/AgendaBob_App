@@ -4,6 +4,7 @@ package casco.project1.dataBackend;
  * Created by Baron on 5/2/2016.
  */
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
@@ -42,5 +43,11 @@ public class User implements Serializable {
         dos.writeUTF(getName());
         dos.writeInt(getImage());
         dos.flush();
+    }
+
+    public static User deserialize(DataInputStream dis) throws IOException {
+        String name = dis.readUTF();
+        int imageIndex = dis.readInt();
+        return new User(name, imageIndex);
     }
 }

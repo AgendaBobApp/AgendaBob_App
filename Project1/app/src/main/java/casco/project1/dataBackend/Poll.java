@@ -1,6 +1,7 @@
 package casco.project1.dataBackend;
 
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
@@ -24,11 +25,11 @@ public class Poll implements Serializable{
         this.creator = new User("FooBar");
         this.title = "A Really Bad Title";
         this.description = "An instance of Poll that really should not be here!";
-        this.baseTime = new Response();
+        this.baseTime = new TimeSet();
         this.responses = new ArrayList<Response>();
     }
 
-    public Poll(int shortCode, User creator, String title, String description, Response baseTime, List<Response> responses) {
+    public Poll(int shortCode, User creator, String title, String description, TimeSet baseTime, List<Response> responses) {
 
         this.shortCode = shortCode;
         this.creator = creator;
@@ -49,6 +50,20 @@ public class Poll implements Serializable{
             r.serialize(dos);
         }
         dos.flush();
+    }
+
+    public static Poll deserialize(DataInputStream dis) throws IOException {
+        int code = dis.readInt();
+        User u = User.deserialize(dis);
+        String title = dis.readUTF();
+        String descr = dis.readUTF();
+        TimeSet ts = TimeSet.deserialize(dis);
+        int size = dis.readInt();
+        List<Response> lst = new ArrayList<Response>();
+        for (int i=0; i < size; i++) {
+            lst.add(Response.deserialize(dis));
+        }
+        return new Poll(code, u, title, descr, ts, lst);
     }
 
     public int getShortCode() {

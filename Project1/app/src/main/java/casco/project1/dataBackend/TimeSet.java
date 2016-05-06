@@ -4,6 +4,7 @@ package casco.project1.dataBackend;
  * Created by Baron on 4/30/2016.
  */
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.List;
@@ -74,5 +75,14 @@ public class TimeSet {
             tr.serialize(dos);
         }
         dos.flush();
+    }
+
+    public static TimeSet deserialize(DataInputStream dis) throws IOException {
+        int size = dis.readInt();
+        Set<TimeRange> times = new TreeSet<TimeRange>();
+        for (int i = 0; i < size; i++) {
+            times.add(TimeRange.deserialize(dis));
+        }
+        return new TimeSet(times);
     }
 }
