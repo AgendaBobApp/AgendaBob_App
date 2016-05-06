@@ -78,6 +78,7 @@
             android:layout_height="wrap_content"
             android:text="View Results"
             android:id="@+id/btn_view_results"
+            android:onClick="viewResults"
 
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
@@ -89,6 +90,8 @@
             android:layout_height="wrap_content"
             android:text="Respond"
             android:id="@+id/btn_respond"
+            android:onClick="viewRespond"
+
 
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
