@@ -14,7 +14,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     List<Poll> polls;
     TextView test;
     User currentUser;
+    int RC_SIGN_IN = 888;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,8 +87,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
     public void loadUser(Bundle bundle){
         currentUser = Constants.loadUser(bundle);
-        test = (TextView) findViewById(R.id.tvTest);
-        test.setText("Logged in as: " + currentUser.getName());
+        //test = (TextView) findViewById(R.id.tvTest);
+        //test.setText("Logged in as: " + currentUser.getName());
         Log.i("STEFAN", currentUser.getName());
     }
 
@@ -127,4 +130,31 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         startActivity(intent);
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleSignInResult(result);
+        }
+    }
+
+    private void handleSignInResult(GoogleSignInResult result) {
+        //Log.d(TAG, "handleSignInResult:" + result.isSuccess());
+        if (result.isSuccess()) {
+            // Signed in successfully, show authenticated UI.
+            GoogleSignInAccount acct = result.getSignInAccount();
+            test = (TextView) findViewById(R.id.tvTest);
+            test.setText("Logged in as: " + acct.getDisplayName());
+            //mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
+            //updateUI(true);
+        } else {
+            test = (TextView) findViewById(R.id.tvTest);
+            test.setText("Please login with Google Login");
+        }
+    }
 }
+
