@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     ListView lvPolls;
     List<Poll> polls;
     TextView test;
-    User currentuser;
+    User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +47,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onClick(View view) {
                 /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();*/
-                Intent pollCreationIntent = new Intent(view.getContext(), PollCreationActivity.class);
-                saveUser(pollCreationIntent);
-                startActivity(pollCreationIntent);
+                Intent intent = new Intent(view.getContext(), PollCreationActivity.class);
+                Bundle b = new Bundle();
+                b.putSerializable(Constants.UserBundleKey, currentUser);
+                intent.putExtras(b);
+                startActivity(intent);
             }
         });
 
@@ -81,18 +83,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
     public void loadUser(Bundle bundle){
-        if (bundle != null) {
-            currentuser = (User) bundle.getSerializable(Constants.UserBundleKey);
-            Log.i("STEFAN", "User passed from other activity");
-        }
-        else
-        {
-            currentuser = new User();
-            Log.i("STEFAN", "User RECREATED");
-        }
+        currentUser = Constants.loadUser(bundle);
         test = (TextView) findViewById(R.id.tvTest);
-        test.setText("Logged in as: "+currentuser.getName());
-        Log.i("STEFAN", currentuser.getName());
+        test.setText("Logged in as: " + currentUser.getName());
+        Log.i("STEFAN", currentUser.getName());
     }
 
 
@@ -125,17 +119,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent= new Intent(this, PollSetupActivity.class);
-//        String[] pollName = getResources().getStringArray(R.array.test_polls);
-//        String[] pollCreator = getResources().getStringArray(R.array.test_participants);
-        //
-        saveUser(intent);
+        Bundle b = new Bundle();
+        b.putSerializable(Constants.UserBundleKey, currentUser);
+        intent.putExtras(b);
         intent.putExtra("PollName", polls.get(position).getTitle());
         intent.putExtra("PollCreator", polls.get(position).getCreator().getName());
+
         startActivity(intent);
-    }
-    public void saveUser(Intent intent){
-        Bundle b = new Bundle();
-        b.putSerializable(Constants.UserBundleKey, currentuser);
-        intent.putExtras(b);
     }
 }
