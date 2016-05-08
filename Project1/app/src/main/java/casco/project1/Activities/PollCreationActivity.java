@@ -1,16 +1,24 @@
 package casco.project1.Activities;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.Intent;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,160 +35,101 @@ import casco.project1.dataBackend.Poll;
 import casco.project1.dataBackend.User;
 
 public class PollCreationActivity extends AppCompatActivity
-        implements Communicator, ClickListener, MaterialCab.Callback
+        implements View.OnClickListener
 {
-    FragmentManager manager;
-    Poll newPoll;
-    Button btnNext;
     User currentUser;
-    TextView test;
-
-    String pollName;
-    String pollDescription;
-
-
-
+    TextView tvPollTitle;
+    EditText tePollTitle;
+    TextView tvPollDescription;
+    EditText tePollDescription;
+    Button btnNext;
+    public String pollName;
+    public String pollDescription;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_poll_creation);
-        manager = getFragmentManager();
-        Bundle bundle = this.getIntent().getExtras();
-        loadUser(bundle);
-        addPart1();
-    }
-    public void loadUser(Bundle bundle){
-        currentUser = Constants.loadUser(bundle);
-        test = (TextView) findViewById(R.id.tvTest);
-        test.setText("Logged in as: " + currentUser.getName());
-        Log.i("STEFAN", currentUser.getName());
-    }
-    public void addPart1(){
-        Log.i("STEFAN", "addPart1");
-        CreatePoll1 fragPart1 = new CreatePoll1();
-        fragPart1.setCommunicator(this);
-        FragmentTransaction trans = manager.beginTransaction();
-        trans.add(R.id.group, fragPart1, "Part1");
-        trans.commit();
-    }
-    public void loadPart1(){
-        Log.i("STEFAN", "loadPart1");
-        CreatePoll1 fragPart1 = new CreatePoll1();
-        Log.i("STEFAN", "SHOULD BE "+fragPart1.newPollName);
-        //fragPart1.setCommunicator(this);
-        fragPart1.setPollNameAndDescription(pollName, pollDescription);
-        FragmentTransaction trans = manager.beginTransaction();
-        trans.replace(R.id.group, fragPart1, "Part1");
-        trans.commit();
-
-    }
-    public void loadPart2(){
-        Log.i("STEFAN", "loadPart2");
-        CreatePoll2 fragPart2 = new CreatePoll2();
-        fragPart2.setPollNameAndDescription(pollName, pollDescription);
-        Log.i("STEFAN", "SHOULD BE "+fragPart2.pollName);
-        //fragPart2.setCommunicator(this);
-        FragmentTransaction trans = manager.beginTransaction();
-        trans.replace(R.id.group, fragPart2, "Part2");
-        trans.commit();
-
-    }
-    public void loadPart3(){
-        Log.i("STEFAN", "loadPart3");
-        CreatePoll2 fragPart3 = new CreatePoll2();
-        //fragPart3.setCommunicator(this);
-        FragmentTransaction trans = manager.beginTransaction();
-        trans.replace(R.id.group, fragPart3, "Part3");
-        trans.commit();
-    }
-    @Override
-    public void switchToPart1() {
-        Log.i("STEFAN", "switchToPart1");
-
-        loadPart1();
-    }
-    @Override
-    public void switchToPart2(String newPollName, String newPollDescription) {
-        Log.i("STEFAN", "switchToPart2");
-        pollName = newPollName;
-        pollDescription = newPollDescription;
-        loadPart2();
-    }
-
-    @Override
-    public void switchToPart2() {
-        Log.i("STEFAN", "switchToPart2");
-        loadPart2();
-    }
-
-    @Override
-    public void switchToPart3() {
-        Log.i("STEFAN", "switchToPart3");
-        loadPart3();
-    }
-
-    @Override
-    public void onClick(int index) {
-        CreatePoll2 fragPart2 = (CreatePoll2) manager.findFragmentByTag("Part2");
-        if(fragPart2 != null)
-        {
-            fragPart2.getDragSelectRecyclerAdapter().toggleSelected(index);
-        }
-    }
-
-    @Override
-    public void onLongClick(int index) {
-        CreatePoll2 fragPart2 = (CreatePoll2) manager.findFragmentByTag("Part2");
-        if(fragPart2 != null)
-        {
-            fragPart2.getDragSelectRecyclerView().setDragSelectActive(true, index);
-        }
-    }
-
-    @Override
-    public boolean onCabCreated(MaterialCab materialCab, Menu menu) {
-
-        return true;
-    }
-
-    @Override
-    public boolean onCabItemClicked(MenuItem item) {
-        CreatePoll2 fragPart2 = (CreatePoll2) manager.findFragmentByTag("Part2");
-        if(fragPart2 == null)
-        {
-            return false;
-        }
-        if(item.getItemId() == R.id.btnPart1)
-        {
-            return false;
-        }
-        else if(item.getItemId() == R.id.btnPart3)
-        {
-            StringBuilder sb = new StringBuilder();
-            int traverse = 0;
-            for(Integer index: fragPart2.getDragSelectRecyclerAdapter().getSelectedIndices())
-            {
-                if(traverse > 0){
-                    sb.append(", ");
-                }
-                sb.append(fragPart2.getDragSelectRecyclerAdapter().getItem(index));
-                traverse++;
+        tvPollTitle = (TextView) findViewById(R.id.tvPollTitle);
+        tePollTitle = (EditText) findViewById(R.id.tePollTitle);
+        tePollTitle.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
-            fragPart2.getDragSelectRecyclerAdapter().clearSelected();
-            return true;
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+                Log.i("STEFAN", "MY TEXT IS \"" + tePollTitle.getText().toString()+ "\"");
+                if (tePollTitle.getText().length() > 0) {
+                    btnNext.setEnabled(true);
+                    pollName = tePollTitle.getText().toString();
+                    pollDescription = tePollDescription.getText().toString();
+                }
+            }
+        });
+        tvPollDescription = (TextView) findViewById(R.id.tvPollDescription);
+        tePollDescription = (EditText) findViewById(R.id.teDescription);
+        btnNext = (Button) findViewById(R.id.btnPart2);
+        btnNext.setOnClickListener(this);
+        Bundle bundle = this.getIntent().getExtras();
+        if(bundle != null)
+            currentUser = Constants.loadUser(bundle);
+        else if (savedInstanceState != null)
+        {
+            pollName = savedInstanceState.getString(Constants.PollNameBundleKey);
+            pollDescription = savedInstanceState.getString(Constants.PollDescBundleKey);
+            currentUser = (User) savedInstanceState.getSerializable(Constants.UserBundleKey);
         }
-        return false;
+        pollName = bundle.getString(Constants.PollNameBundleKey,"");
+        pollDescription = bundle.getString(Constants.PollDescBundleKey,"");
+        btnNext.setEnabled(false);
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i("STEFAN", "MY TEXT IS \"" + tePollTitle.getText().toString() + "\"");
+        if (tePollTitle.getText().length() > 0) {
+            btnNext.setEnabled(true);
+            Log.i("STEFAN", "ENABLED WHEN \"" + tePollTitle.getText().toString() + "\"");
+        }else {
+            btnNext.setEnabled(false);
+        }
     }
 
     @Override
-    public boolean onCabFinished(MaterialCab materialCab) {
-        CreatePoll2 fragPart2 = (CreatePoll2) manager.findFragmentByTag("Part2");
-        if(fragPart2 == null)
-        {
-            return false;
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        pollName = savedInstanceState.getString(Constants.PollNameBundleKey);
+        pollDescription = savedInstanceState.getString(Constants.PollDescBundleKey);
+        currentUser = (User) savedInstanceState.getSerializable(Constants.UserBundleKey);
+        Log.i("STEFAN", "MY TEXT IS \"" + tePollTitle.getText().toString() + "\"");
+        if (tePollTitle.getText().length() > 0) {
+            btnNext.setEnabled(true);
+            Log.i("STEFAN", "ENABLED WHEN \"" + tePollTitle.getText().toString() + "\"");
+        }else {
+            btnNext.setEnabled(false);
         }
-        fragPart2.getDragSelectRecyclerAdapter().clearSelected();
-        return true;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+
+        outState.putString(Constants.PollNameBundleKey, pollName);
+        outState.putString(Constants.PollDescBundleKey, pollDescription);
+        outState.putSerializable(Constants.UserBundleKey, currentUser);
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent(this, PollCreation2Activity.class);
+        Bundle b = new Bundle();
+        b.putSerializable(Constants.UserBundleKey, currentUser);
+        intent.putExtras(b);
+        intent.putExtra(Constants.PollNameBundleKey, pollName);
+        intent.putExtra(Constants.PollDescBundleKey, pollDescription);
+
+        startActivity(intent);
+    }
 }

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -69,5 +70,14 @@ public class PollSetupActivity extends AppCompatActivity implements AdapterView.
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         String[] desc = getResources().getStringArray(R.array.test_participants);
         Toast.makeText(this, desc[position], Toast.LENGTH_SHORT);
+    }
+
+    public void viewResults(View view) {
+        Intent intent = new Intent(this, PollResultsActivity.class);
+        startActivity(intent);
+    }
+    public void viewRespond(View view) {
+        Intent intent = new Intent(this, PollRespondActivity.class);
+        startActivity(intent);
     }
 }

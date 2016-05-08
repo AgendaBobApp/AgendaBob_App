@@ -6,6 +6,7 @@ package casco.project1.dataBackend;
 
 import android.util.ArraySet;
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.List;
@@ -40,10 +41,23 @@ public class Response extends TimeSet{
     public Date getDate() { return date; }
 
     public void serialize(DataOutputStream dos) throws IOException {
+        creator.serialize(dos);
+        dos.writeLong(date.getTime()); // date as a long
         dos.writeInt(times.size()); // how many elements are in the list
         for (TimeRange tr : times) {
             tr.serialize(dos);
         }
         dos.flush();
+    }
+
+    public static Response deserialize(DataInputStream dis) throws IOException {
+        User u = User.deserialize(dis);
+        Date d = new Date(dis.readLong());
+        int size = dis.readInt();
+        Set<TimeRange> s = new TreeSet<TimeRange>();
+        for (int i = 0; i < size; i++) {
+            s.add(TimeRange.deserialize(dis));
+        }
+        return new Response(s, u, d);
     }
 }
