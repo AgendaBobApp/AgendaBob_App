@@ -55,9 +55,9 @@ public class PollCreation2Activity
         }
 
         tvPollName = (TextView) findViewById(R.id.tvPollName2);
-        dsraAdapter = new DragSelectRecyclerAdapter((ClickListener) this);
+        dsraAdapter = new DragSelectRecyclerAdapter(this);
         dsraAdapter.load();
-        dsraAdapter.setSelectionListener((DragSelectRecyclerViewAdapter.SelectionListener) this);
+        dsraAdapter.setSelectionListener(this);
         dsraAdapter.restoreInstanceState(savedInstanceState);
 
         dsrvDays = (DragSelectRecyclerView) findViewById(R.id.dsrvDays);
@@ -132,7 +132,7 @@ public class PollCreation2Activity
                 break;
             case R.id.btnPart3:
                 Log.i("STEFAN", "Clicked Next");
-                Intent intent2 = new Intent(this, PollCreation2Activity.class);
+                Intent intent2 = new Intent(this, PollCreation3Activity.class);
                 Bundle b2 = new Bundle();
                 b2.putSerializable(Constants.UserBundleKey, currentUser);
                 intent2.putExtras(b2);

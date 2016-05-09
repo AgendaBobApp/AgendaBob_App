@@ -61,10 +61,11 @@
 
         <activity
             android:name=".Activities.PollCreationActivity"
-            android:label="New Poll: 1"></activity>
+            android:label="New Poll: 1" />
         <activity
             android:name=".Activities.PollCreation2Activity"
-            android:label="New Poll: 2"></activity>
+            android:label="New Poll: 2" />
+        <activity android:name=".Activities.PollCreation3Activity"></activity>
     </application>
 
 </manifest>
