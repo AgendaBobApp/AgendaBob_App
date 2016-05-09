@@ -50,25 +50,14 @@
 
 
     </LinearLayout>
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/relativeRecycler"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="16dp">
 
-
-        <com.afollestad.dragselectrecyclerview.DragSelectRecyclerView
-            android:id="@+id/dsrvDays"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="vertical"
-            />
-    </LinearLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal">
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -84,6 +73,15 @@
             android:id="@+id/btnPart3"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true" />
+
+        <com.afollestad.dragselectrecyclerview.DragSelectRecyclerView
+            android:id="@+id/dsrvDays"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical"
+            android:layout_above="@id/btnPart1"
+            />
+
     </RelativeLayout>
 
 </LinearLayout>
