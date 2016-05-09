@@ -5,11 +5,9 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.afollestad.dragselectrecyclerview.DragSelectRecyclerViewAdapter;
@@ -26,7 +24,7 @@ import casco.project1.dataBackend.Constants;
  * Created by christianmello on 5/9/16.
  */
 public class DragSelectRecyclerAdapter2
-        extends DragSelectRecyclerViewAdapter<DragSelectRecyclerAdapter.MainViewHolder>
+        extends DragSelectRecyclerViewAdapter<DragSelectRecyclerAdapter2.MainViewHolder>
 {
     ClickListener clickListener;
     List<String> labelList = new ArrayList<String>();
@@ -54,7 +52,7 @@ public class DragSelectRecyclerAdapter2
 
     public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         View v = LayoutInflater.from(parent.getContext()).inflate(
-                R.layout.griditem_week_day,parent, false);
+                R.layout.griditem_poll_creation3,parent, false);
         return new MainViewHolder(v,clickListener);
     }
 
@@ -89,7 +87,7 @@ public class DragSelectRecyclerAdapter2
         public MainViewHolder(View itemView, ClickListener callback) {
             super(itemView);
             clickListener = callback;
-            label = (TextView) itemView.findViewById(R.id.label);
+            label = (TextView) itemView.findViewById(R.id.label2);
             colorSquare = (RectangleView) itemView.findViewById(R.id.colorSquare2);
             this.itemView.setOnClickListener(this);
             this.itemView.setOnLongClickListener(this);

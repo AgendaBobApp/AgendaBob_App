@@ -1,5 +1,6 @@
 package casco.project1.Activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,12 +11,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.dragselectrecyclerview.DragSelectRecyclerView;
 import com.afollestad.dragselectrecyclerview.DragSelectRecyclerViewAdapter;
 import com.afollestad.materialcab.MaterialCab;
 
-import casco.project1.Adapters.DragSelectRecyclerAdapter;
+import casco.project1.Adapters.DragSelectRecyclerAdapter2;
 import casco.project1.Interfaces.ClickListener;
 import casco.project1.R;
 import casco.project1.dataBackend.Constants;
@@ -34,7 +36,7 @@ public class PollCreation3Activity
     Button btnBack;
     Button btnCreate;
     DragSelectRecyclerView dsrvTimes;
-    DragSelectRecyclerAdapter dsraAdapter;
+    DragSelectRecyclerAdapter2 dsraAdapter2;
     MaterialCab cab;
 
     @Override
@@ -52,20 +54,20 @@ public class PollCreation3Activity
             currentUser = (User) savedInstanceState.getSerializable(Constants.UserBundleKey);
         }
 
-        tvPollName = (TextView) findViewById(R.id.tvPollName2);
-        dsraAdapter = new DragSelectRecyclerAdapter(this);
-        dsraAdapter.load();
-        dsraAdapter.setSelectionListener(this);
-        dsraAdapter.restoreInstanceState(savedInstanceState);
+        tvPollName = (TextView) findViewById(R.id.tvPollName3);
+        dsraAdapter2 = new DragSelectRecyclerAdapter2(this);
+        dsraAdapter2.load();
+        dsraAdapter2.setSelectionListener(this);
+        dsraAdapter2.restoreInstanceState(savedInstanceState);
 
-        dsrvTimes = (DragSelectRecyclerView) findViewById(R.id.dsrvDays);
-        dsrvTimes.setAdapter(dsraAdapter);
+        dsrvTimes = (DragSelectRecyclerView) findViewById(R.id.dsrvTimes);
+        dsrvTimes.setAdapter(dsraAdapter2);
         dsrvTimes.setLayoutManager(new LinearLayoutManager(this));
         cab = MaterialCab.restoreState(
                 savedInstanceState, this, this);
 
-        btnBack = (Button) findViewById(R.id.btnPart1);
-        btnCreate = (Button) findViewById(R.id.btnPart3);
+        btnBack = (Button) findViewById(R.id.btnPart2);
+        btnCreate = (Button) findViewById(R.id.btnCreate);
         btnBack.setOnClickListener(this);
         btnCreate.setOnClickListener(this);
         pollName = bundle.getString(Constants.PollNameBundleKey);
@@ -78,8 +80,8 @@ public class PollCreation3Activity
     public DragSelectRecyclerView getDragSelectRecyclerView(){
         return dsrvTimes;
     }
-    public DragSelectRecyclerAdapter getDragSelectRecyclerAdapter(){
-        return dsraAdapter;
+    public DragSelectRecyclerAdapter2 getDragSelectRecyclerAdapter2(){
+        return dsraAdapter2;
     }
     @Override
     public void onDragSelectionChanged(int i) {
@@ -99,8 +101,8 @@ public class PollCreation3Activity
         outState.putString(Constants.PollNameBundleKey, pollName);
         outState.putString(Constants.PollDescBundleKey, pollDescription);
         outState.putSerializable(Constants.UserBundleKey, currentUser);
-        if (dsraAdapter != null) {
-            dsraAdapter.saveInstanceState(outState);
+        if (dsraAdapter2 != null) {
+            dsraAdapter2.saveInstanceState(outState);
         }
         if (cab != null) {
             cab.saveState(outState);
@@ -117,7 +119,7 @@ public class PollCreation3Activity
     public void onClick(View v) {
         switch (v.getId())
         {
-            case R.id.btnPart1:
+            case R.id.btnPart2:
                 Log.i("STEFAN", "Clicked Back");
                 Intent intent1 = new Intent(this, PollCreation2Activity.class);
                 Bundle b1 = new Bundle();
@@ -128,16 +130,22 @@ public class PollCreation3Activity
 
                 startActivity(intent1);
                 break;
-            case R.id.btnPart3:
+            case R.id.btnCreate:
                 Log.i("STEFAN", "Clicked Create");
-                Intent intent2 = new Intent(this, PollCreation3Activity.class);
+                /*Intent intent2 = new Intent(this, PollCreation3Activity.class);
                 Bundle b2 = new Bundle();
                 b2.putSerializable(Constants.UserBundleKey, currentUser);
                 intent2.putExtras(b2);
                 intent2.putExtra(Constants.PollNameBundleKey, pollName);
                 intent2.putExtra(Constants.PollDescBundleKey, pollDescription);
 
-                startActivity(intent2);
+                startActivity(intent2);*/
+                Context context = getApplicationContext();
+                CharSequence text = "Poll (not really) created!";
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
                 break;
             case R.id.dsrvTimes:
                 Log.i("STEFAN", "Selected Recycler");
@@ -151,7 +159,7 @@ public class PollCreation3Activity
     @Override
     public void onClick(int index) {
 
-        getDragSelectRecyclerAdapter().toggleSelected(index);
+        getDragSelectRecyclerAdapter2().toggleSelected(index);
 
     }
 
@@ -175,15 +183,15 @@ public class PollCreation3Activity
         {
             StringBuilder sb = new StringBuilder();
             int traverse = 0;
-            for(Integer index: getDragSelectRecyclerAdapter().getSelectedIndices())
+            for(Integer index: getDragSelectRecyclerAdapter2().getSelectedIndices())
             {
                 if(traverse > 0){
                     sb.append(", ");
                 }
-                sb.append(getDragSelectRecyclerAdapter().getItem(index));
+                sb.append(getDragSelectRecyclerAdapter2().getItem(index));
                 traverse++;
             }
-            getDragSelectRecyclerAdapter().clearSelected();
+            getDragSelectRecyclerAdapter2().clearSelected();
             return true;
         }
         return false;
@@ -191,7 +199,7 @@ public class PollCreation3Activity
 
     @Override
     public boolean onCabFinished(MaterialCab materialCab) {
-        getDragSelectRecyclerAdapter().clearSelected();
+        getDragSelectRecyclerAdapter2().clearSelected();
         return true;
     }
 }
