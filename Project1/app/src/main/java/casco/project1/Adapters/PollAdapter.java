@@ -61,7 +61,7 @@ public class PollAdapter extends BaseAdapter {
         ImageView image = (ImageView) row.findViewById(R.id.iv_profile_icon);
         poll.setText(polls.get(position).getTitle());
         creator.setText(polls.get(position).getCreator().getName());
-        image.setImageResource(polls.get(position).getCreator().getImage());
+        //image.setImageResource(polls.get(position).getCreator().getImage());
         return row;
     }
 }

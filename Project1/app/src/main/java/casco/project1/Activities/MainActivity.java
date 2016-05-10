@@ -80,11 +80,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         String[] files = fileList();
         if (files.length > 0) {
             for (String file : files) {
+                Log.d("CHANG", "Filename: " + file);
                 try {
                     fis = openFileInput(file);
                     depoll = (Poll) Serializier.deserialize(fis);
+                    Log.d("CHANG", "Before adding the poll.");
                     polls.add(depoll);
+                    Log.d("CHANG", "After adding the poll.");
                 } catch (Exception e) {
+                    Log.d("CHANG", "Are we in the catch block?");
+                    Log.d("CHANG", e.toString());
                     e.printStackTrace();
                 }
             }
@@ -115,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         /*try {
             poll_serialization();
+
         } catch (Exception e) {
             e.printStackTrace();
         }*/
