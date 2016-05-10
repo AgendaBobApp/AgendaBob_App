@@ -9,22 +9,23 @@ import android.util.TimeUtils;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * has start stop times for a given date
  * also has comparators for
  */
-public class TimeRange {
+public class TimeRange implements Serializable{
     private Date startTime;
     private Date endTime;
 
-    TimeRange() {
+    public TimeRange() {
         this.startTime = new Date();
         this.endTime = new Date();
     }
 
-    TimeRange(Date startTime, Date endTime) {
+    public TimeRange(Date startTime, Date endTime) {
         this.startTime = startTime;
         this.endTime = endTime;
     }
@@ -59,17 +60,5 @@ public class TimeRange {
             }
         }
         return null; //should this throw an exception instead?
-    }
-
-    public void serialize(DataOutputStream dos) throws IOException {
-        dos.writeLong(startTime.getTime()); // write the data as a long
-        dos.writeLong(endTime.getTime()); // write the data as a long
-        dos.flush();
-    }
-
-    public static TimeRange deserialize(DataInputStream dis) throws IOException {
-        Date d1 = new Date(dis.readLong());
-        Date d2 = new Date(dis.readLong());
-        return new TimeRange(d1, d2);
     }
 }

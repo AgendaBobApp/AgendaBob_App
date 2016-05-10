@@ -54,8 +54,10 @@ public class TestPopulator {
         users.add(new User(userNames[userID % userNames.length], images[userID % images.length]));
         userID++;
     }
+    /*
     public void createParticipant(){
         participants.add(new Response(new TreeSet<TimeRange>(), new User(userNames[partID % userNames.length], images[partID % images.length]), new Date()));
         partID++;
     }
+    */
 }

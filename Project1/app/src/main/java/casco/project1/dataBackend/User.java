@@ -38,16 +38,4 @@ public class User implements Serializable {
     public int getImage() {
         return imageIndex;
     }
-
-    public void serialize(DataOutputStream dos) throws IOException{
-        dos.writeUTF(getName());
-        dos.writeInt(getImage());
-        dos.flush();
-    }
-
-    public static User deserialize(DataInputStream dis) throws IOException {
-        String name = dis.readUTF();
-        int imageIndex = dis.readInt();
-        return new User(name, imageIndex);
-    }
 }

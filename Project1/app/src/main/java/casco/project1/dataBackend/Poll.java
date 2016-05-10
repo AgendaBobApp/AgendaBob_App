@@ -39,33 +39,6 @@ public class Poll implements Serializable{
         this.responses = responses;
     }
 
-    public void serialize(DataOutputStream dos) throws IOException {
-        dos.writeInt(getShortCode());
-        creator.serialize(dos);
-        dos.writeUTF(getTitle());
-        dos.writeUTF(getDescription());
-        baseTime.serialize(dos);
-        dos.writeInt(responses.size()); // so you know how many elements in the list
-        for (Response r : responses) {
-            r.serialize(dos);
-        }
-        dos.flush();
-    }
-
-    public static Poll deserialize(DataInputStream dis) throws IOException {
-        int code = dis.readInt();
-        User u = User.deserialize(dis);
-        String title = dis.readUTF();
-        String descr = dis.readUTF();
-        TimeSet ts = TimeSet.deserialize(dis);
-        int size = dis.readInt();
-        List<Response> lst = new ArrayList<Response>();
-        for (int i=0; i < size; i++) {
-            lst.add(Response.deserialize(dis));
-        }
-        return new Poll(code, u, title, descr, ts, lst);
-    }
-
     public int getShortCode() {
         return shortCode;
     }
@@ -90,10 +63,10 @@ public class Poll implements Serializable{
     public List<Response> getResponses() {
         return responses;
     }
-
+/*
     // return the combined response of all participants
     public TimeSet combinedResponse()  {
-        List<TimeSet> list = new LinkedList<TimeSet>();
+        List<TimeSet> list = new ArrayList<TimeSet>();
         list.add(baseTime);
         for (Response r : responses) {
             list.add(r);
@@ -102,7 +75,7 @@ public class Poll implements Serializable{
         TimeSet response = new TimeSet(list);
         return response;
     }
-
+*/
     // get all users that have participated
     public List<User> allParticipants() {
         List<User> list = new LinkedList<User>();
@@ -111,7 +84,7 @@ public class Poll implements Serializable{
         }
         return list;
     }
-
+/*
     // get a response for a particular user
     // the user's response is combined with the bastTime
     // may need to be edited
@@ -125,4 +98,5 @@ public class Poll implements Serializable{
         }
         return new TimeSet(list);
     }
+    */
 }

@@ -1,5 +1,6 @@
 package casco.project1.Activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -20,6 +21,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import casco.project1.DisplayPreferences;
@@ -27,7 +32,11 @@ import casco.project1.Adapters.PollAdapter;
 import casco.project1.R;
 import casco.project1.dataBackend.Constants;
 import casco.project1.dataBackend.Poll;
+import casco.project1.dataBackend.Response;
+import casco.project1.dataBackend.Serializier;
 import casco.project1.dataBackend.TestPopulator;
+import casco.project1.dataBackend.TimeRange;
+import casco.project1.dataBackend.TimeSet;
 import casco.project1.dataBackend.User;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
@@ -83,6 +92,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         int RC_SIGN_IN = 888;
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
+
+        try {
+            poll_serialization();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
     public void loadUser(Bundle bundle){
@@ -155,6 +170,55 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             test = (TextView) findViewById(R.id.tvTest);
             test.setText("Please login with Google Login");
         }
+    }
+
+
+
+    public void poll_serialization() throws Exception {
+        int c = 753;
+
+        User u = new User("Mary Poppins");
+
+        String t = "Penguins";
+
+        String d = "supercalifragilisticexpialidocious";
+
+        List<TimeRange> ltr = new ArrayList<TimeRange>();
+        ltr.add(new TimeRange(new Date(2016 - 1900, 4, 9), new Date(2016 - 1900, 4, 10)));
+        ltr.add(new TimeRange(new Date(2016 - 1900, 4, 11), new Date(2016 - 1900, 4, 12)));
+        ltr.add(new TimeRange(new Date(2016 - 1900, 4, 13), new Date(2016 - 1900, 4, 14)));
+        TimeSet ts = new TimeSet(ltr);
+
+        List<Response> r = new ArrayList<Response>();
+        r.add(new Response(ltr, new User("Bert"), new Date()));
+        r.add(new Response(ltr, new User("Mr. Banks"), new Date()));
+
+        Poll poll = new Poll(c, u, t, d, ts, r);
+
+        // serialize file
+        String fileName = "poll.poll";
+        FileOutputStream fos;
+        try {
+            fos = openFileOutput(fileName, Context.MODE_PRIVATE);
+            Serializier.serialize(fos, poll);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // deserialize file
+        Poll depoll = null;
+        FileInputStream fis;
+        try {
+            fis = openFileInput(fileName);
+            depoll = (Poll) Serializier.deserialize(fis);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Log.i("SERIAL TEST", "code: " + depoll.getShortCode());
+        Log.i("SERIAL TEST", "user: " + depoll.getCreator().getName());
+        Log.i("SERIAL TEST", "title: " + depoll.getTitle());
+        Log.i("SERIAL TEST", "desc: " + depoll.getDescription());
     }
 }
 
