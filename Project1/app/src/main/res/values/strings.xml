@@ -17,7 +17,7 @@
         <item>Austin</item>
         <item>Will</item>
         <item>Stefan</item>
-        <item>Johnathon</item>
+        <item>Johnathan</item>
         <item>Christian</item>
     </string-array>
     <string name="title_activity_main2">Main2Activity</string>
@@ -25,5 +25,55 @@
     <string name="create">Create</string>
     <string name="choose_times">Choose Times</string>
     <string name="poll">Poll</string>
+    <string-array name="times_half_hour">
+        <item>12:00am</item>
+        <item>12:30am</item>
+        <item>1:00am</item>
+        <item>1:30am</item>
+        <item>2:00am</item>
+        <item>2:30am</item>
+        <item>3:00am</item>
+        <item>3:30am</item>
+        <item>4:00am</item>
+        <item>4:30am</item>
+        <item>5:00am</item>
+        <item>5:30am</item>
+        <item>6:00am</item>
+        <item>6:30am</item>
+        <item>7:00am</item>
+        <item>7:30am</item>
+        <item>8:00am</item>
+        <item>8:30am</item>
+        <item>9:00am</item>
+        <item>9:30am</item>
+        <item>10:00am</item>
+        <item>10:30am</item>
+        <item>11:00am</item>
+        <item>11:30am</item>
+        <item>12:00pm</item>
+        <item>12:30pm</item>
+        <item>1:00pm</item>
+        <item>1:30pm</item>
+        <item>2:00pm</item>
+        <item>2:30pm</item>
+        <item>3:00pm</item>
+        <item>3:30pm</item>
+        <item>4:00pm</item>
+        <item>4:30pm</item>
+        <item>5:00pm</item>
+        <item>5:30pm</item>
+        <item>6:00pm</item>
+        <item>6:30pm</item>
+        <item>7:00pm</item>
+        <item>7:30pm</item>
+        <item>8:00pm</item>
+        <item>8:30pm</item>
+        <item>9:00pm</item>
+        <item>9:30pm</item>
+        <item>10:00pm</item>
+        <item>10:30pm</item>
+        <item>11:00pm</item>
+        <item>11:30pm</item>
+    </string-array>
 
 </resources>
