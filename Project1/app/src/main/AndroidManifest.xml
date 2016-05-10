@@ -61,7 +61,8 @@
 
         <activity
             android:name=".Activities.PollCreationActivity"
-            android:label="New Poll: 1" />
+            android:label="New Poll: 1"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".Activities.PollCreation2Activity"
             android:label="New Poll: 2" />
