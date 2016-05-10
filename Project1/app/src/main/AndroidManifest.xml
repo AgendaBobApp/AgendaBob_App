@@ -30,26 +30,26 @@
                 android:value=".Activities.MainActivity" />
         </activity>
         <activity
-            android:name=".Activities.PollSetupActivity"
+            android:name=".Activities.PollDetailsActivity"
             android:label="Poll Details"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.PollRespondActivity"
             android:label="Respond"
-            android:parentActivityName=".Activities.PollSetupActivity"
+            android:parentActivityName=".Activities.PollDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="casco.project1.Activities.PollSetupActivity" />
+                android:value=".Activities.PollDetailsActivity" />
         </activity>
         <activity
             android:name=".Activities.PollResultsActivity"
             android:label="Results"
-            android:parentActivityName=".Activities.PollSetupActivity"
+            android:parentActivityName=".Activities.PollDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="casco.project1.Activities.PollSetupActivity" />
+                android:value=".Activities.PollDetailsActivity" />
         </activity>
         <!--
      ATTENTION: This was auto-generated to add Google Play services to your project for
@@ -62,7 +62,7 @@
         <activity
             android:name=".Activities.PollCreationActivity"
             android:label="New Poll: 1"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activities.PollCreation2Activity"
             android:label="New Poll: 2" />

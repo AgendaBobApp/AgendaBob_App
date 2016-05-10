@@ -12,8 +12,14 @@ import casco.project1.R;
  */
 public class Constants {
     // public static final
+    public static final String PollFilePath = "";
+    public static final String PollBundleKey = "POLL";
     public static final String PollNameBundleKey = "POLL NAME";
     public static final String PollDescBundleKey = "POLL DESC";
+    public static final String PollDaysBundleKey = "POLL DAYS";
+    public static final String PollTimesBundleKey = "POLL TIMES";
+    public static final String PollStartTimeBundleKey = "POLL START TIME";
+    public static final String PollEndTimeBundleKey = "POLL END TIME";
     public static final String UserBundleKey = "USER";
     public static final String[] WeekDays = {
             "Monday", "Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"
@@ -34,7 +40,7 @@ public class Constants {
             currentUser = (User) bundle.getSerializable(Constants.UserBundleKey);
             if(currentUser == null) {
                 Log.i("STEFAN", "Bundle was not null, but user was.");
-                currentUser = new User();
+                return new User();
             }
             else
                 Log.i("STEFAN", "User passed from other activity");

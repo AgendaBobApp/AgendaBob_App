@@ -6,7 +6,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.PollSetupActivity">
+    tools:context=".Activities.PollDetailsActivity">
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -54,7 +55,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Participants"
+        android:text="Responses"
         android:textSize="20dp"
         android:textColor="#000"
         android:id="@+id/tv_list_description"
@@ -64,7 +65,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight=".4"
-        android:id="@+id/lv_participants"
+        android:id="@+id/lv_responses"
 />
 
     <RelativeLayout

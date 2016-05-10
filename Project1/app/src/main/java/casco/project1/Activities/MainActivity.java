@@ -2,8 +2,11 @@ package casco.project1.Activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -40,6 +43,7 @@ import casco.project1.dataBackend.TimeSet;
 import casco.project1.dataBackend.User;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+    CoordinatorLayout coordinatorLayout;
     ListView lvPolls;
     List<Poll> polls;
     TextView test;
@@ -54,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.main);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         lvPolls.setAdapter(new PollAdapter(this, data));
         lvPolls.setOnItemClickListener(this);
         Bundle bundle = this.getIntent().getExtras();
-        loadUser(bundle);
+        //loadUser(bundle);
 
         GoogleApiClient.OnConnectionFailedListener listen = new GoogleApiClient.OnConnectionFailedListener() {
             @Override
@@ -136,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent= new Intent(this, PollSetupActivity.class);
+        Intent intent= new Intent(this, PollDetailsActivity.class);
         Bundle b = new Bundle();
         b.putSerializable(Constants.UserBundleKey, currentUser);
         intent.putExtras(b);
@@ -163,7 +168,26 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             test = (TextView) findViewById(R.id.tvTest);
-            test.setText("Logged in as: " + acct.getDisplayName());
+            String personName = acct.getDisplayName();
+            String personEmail = acct.getEmail();
+            String personId = acct.getId();
+            Uri personPhoto = acct.getPhotoUrl();
+
+            test.setText("Logged in as: " + personName);
+
+            currentUser = new User(personName);
+            if(currentUser == null) {
+                Snackbar snackbar = Snackbar.make(
+                        coordinatorLayout, "Logged in as "+personName+", but User class is NULL",
+                        Snackbar.LENGTH_LONG);
+                snackbar.show();
+            }else{
+                Snackbar snackbar = Snackbar.make(
+                        coordinatorLayout, "Logged in as "+personName+".  Welcome!",
+                        Snackbar.LENGTH_LONG);
+                snackbar.show();
+            }
+
             //mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
             //updateUI(true);
         } else {

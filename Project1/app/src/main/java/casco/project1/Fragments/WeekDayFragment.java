@@ -15,7 +15,7 @@ import com.afollestad.dragselectrecyclerview.DragSelectRecyclerView;
 import com.afollestad.dragselectrecyclerview.DragSelectRecyclerViewAdapter;
 import com.afollestad.materialcab.MaterialCab;
 
-import casco.project1.Adapters.DragSelectRecyclerAdapter;
+import casco.project1.Adapters.DragSelectRecyclerAdapterDays;
 import casco.project1.Interfaces.ClickListener;
 import casco.project1.Interfaces.Communicator;
 import casco.project1.R;
@@ -28,7 +28,7 @@ public class WeekDayFragment extends Fragment
     public String pollDay;
     Button btnBack;
     DragSelectRecyclerView dsrvTimes;
-    public DragSelectRecyclerAdapter dsraAdapter;
+    public DragSelectRecyclerAdapterDays dsraAdapter;
     Communicator comm;
     ClickListener listener;
     MaterialCab cab;
@@ -58,7 +58,7 @@ public class WeekDayFragment extends Fragment
         comm = (Communicator) getActivity();
         listener = (ClickListener) getActivity();
         tvPollDay = (TextView) getActivity().findViewById(R.id.tvWeekDay);
-        dsraAdapter = new DragSelectRecyclerAdapter((ClickListener) getActivity());
+        dsraAdapter = new DragSelectRecyclerAdapterDays((ClickListener) getActivity());
         dsraAdapter.load();
         dsraAdapter.setSelectionListener(this);
         dsraAdapter.restoreInstanceState(savedInstanceState);

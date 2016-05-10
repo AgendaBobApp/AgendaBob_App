@@ -1,6 +1,5 @@
 package casco.project1.Activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,11 +15,11 @@ import com.afollestad.dragselectrecyclerview.DragSelectRecyclerView;
 import com.afollestad.dragselectrecyclerview.DragSelectRecyclerViewAdapter;
 import com.afollestad.materialcab.MaterialCab;
 
-import casco.project1.Adapters.DragSelectRecyclerAdapter;
+import casco.project1.Adapters.DragSelectRecyclerAdapterDays;
 import casco.project1.Interfaces.ClickListener;
-import casco.project1.Interfaces.Communicator;
 import casco.project1.R;
 import casco.project1.dataBackend.Constants;
+import casco.project1.dataBackend.Poll;
 import casco.project1.dataBackend.User;
 
 public class PollCreation2Activity
@@ -29,15 +28,24 @@ public class PollCreation2Activity
         View.OnClickListener, DragSelectRecyclerViewAdapter.SelectionListener
 {
     User currentUser;
+    Poll newPoll;
 
     TextView tvPollName;
     String pollName;
     String pollDescription;
+    String timeStart;
+    String timeEnd;
     Button btnBack;
     Button btnNext;
     DragSelectRecyclerView dsrvDays;
-    DragSelectRecyclerAdapter dsraAdapter;
+    DragSelectRecyclerAdapterDays dsraAdapter;
     MaterialCab cab;
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,17 +53,21 @@ public class PollCreation2Activity
         setContentView(R.layout.activity_poll_creation2);
 
         Bundle bundle = this.getIntent().getExtras();
-        if(bundle != null)
+        if(bundle != null){
             currentUser = Constants.loadUser(bundle);
+            newPoll = (Poll) bundle.getSerializable(Constants.PollBundleKey);
+        }
         else if (savedInstanceState != null)
         {
             pollName = savedInstanceState.getString(Constants.PollNameBundleKey);
             pollDescription = savedInstanceState.getString(Constants.PollDescBundleKey);
             currentUser = (User) savedInstanceState.getSerializable(Constants.UserBundleKey);
+            newPoll = (Poll) savedInstanceState.getSerializable(Constants.PollBundleKey);
+
         }
 
         tvPollName = (TextView) findViewById(R.id.tvPollName2);
-        dsraAdapter = new DragSelectRecyclerAdapter(this);
+        dsraAdapter = new DragSelectRecyclerAdapterDays(this);
         dsraAdapter.load();
         dsraAdapter.setSelectionListener(this);
         dsraAdapter.restoreInstanceState(savedInstanceState);
@@ -70,9 +82,11 @@ public class PollCreation2Activity
         btnNext = (Button) findViewById(R.id.btnPart3);
         btnBack.setOnClickListener(this);
         btnNext.setOnClickListener(this);
-        pollName = bundle.getString(Constants.PollNameBundleKey);
-        pollDescription = bundle.getString(Constants.PollDescBundleKey);
-        tvPollName.setText(pollName);
+//        pollName = bundle.getString(Constants.PollNameBundleKey);
+//        pollDescription = bundle.getString(Constants.PollDescBundleKey);
+        timeStart = bundle.getString(Constants.PollStartTimeBundleKey);
+        timeEnd = bundle.getString(Constants.PollEndTimeBundleKey);
+        tvPollName.setText(newPoll.getTitle());
         btnNext.setEnabled(false);
 
     }
@@ -80,7 +94,7 @@ public class PollCreation2Activity
     public DragSelectRecyclerView getDragSelectRecyclerView(){
         return dsrvDays;
     }
-    public DragSelectRecyclerAdapter getDragSelectRecyclerAdapter(){
+    public DragSelectRecyclerAdapterDays getDragSelectRecyclerAdapter(){
         return dsraAdapter;
     }
     @Override
@@ -101,6 +115,7 @@ public class PollCreation2Activity
         outState.putString(Constants.PollNameBundleKey, pollName);
         outState.putString(Constants.PollDescBundleKey, pollDescription);
         outState.putSerializable(Constants.UserBundleKey, currentUser);
+        outState.putSerializable(Constants.PollBundleKey, newPoll);
         if (dsraAdapter != null) {
             dsraAdapter.saveInstanceState(outState);
         }
@@ -114,6 +129,7 @@ public class PollCreation2Activity
         pollName = savedInstanceState.getString(Constants.PollNameBundleKey);
         pollDescription = savedInstanceState.getString(Constants.PollDescBundleKey);
         currentUser = (User) savedInstanceState.getSerializable(Constants.UserBundleKey);
+        newPoll = (Poll) savedInstanceState.getSerializable(Constants.PollBundleKey);
     }
     @Override
     public void onClick(View v) {
@@ -136,9 +152,12 @@ public class PollCreation2Activity
                 Intent intent2 = new Intent(this, PollCreation3Activity.class);
                 Bundle b2 = new Bundle();
                 b2.putSerializable(Constants.UserBundleKey, currentUser);
+                b2.putSerializable(Constants.PollBundleKey, newPoll);
                 intent2.putExtras(b2);
-                intent2.putExtra(Constants.PollNameBundleKey, pollName);
-                intent2.putExtra(Constants.PollDescBundleKey, pollDescription);
+//                intent2.putExtra(Constants.PollNameBundleKey, pollName);
+//                intent2.putExtra(Constants.PollDescBundleKey, pollDescription);
+                intent2.putExtra(Constants.PollStartTimeBundleKey, timeStart);
+                intent2.putExtra(Constants.PollEndTimeBundleKey, timeEnd);
 
                 startActivity(intent2);
                 break;

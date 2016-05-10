@@ -1,17 +1,13 @@
 package casco.project1.Fragments;
 
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 //import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -21,9 +17,7 @@ import com.afollestad.dragselectrecyclerview.DragSelectRecyclerView;
 import com.afollestad.dragselectrecyclerview.DragSelectRecyclerViewAdapter;
 import com.afollestad.materialcab.MaterialCab;
 
-import org.w3c.dom.Text;
-
-import casco.project1.Adapters.DragSelectRecyclerAdapter;
+import casco.project1.Adapters.DragSelectRecyclerAdapterDays;
 import casco.project1.Interfaces.ClickListener;
 import casco.project1.Interfaces.Communicator;
 import casco.project1.R;
@@ -41,7 +35,7 @@ public class CreatePoll2 extends Fragment
     Button btnBack;
     Button btnNext;
     DragSelectRecyclerView dsrvDays;
-    public DragSelectRecyclerAdapter dsraAdapter;
+    public DragSelectRecyclerAdapterDays dsraAdapter;
     Communicator comm;
     ClickListener listener;
     MaterialCab cab;
@@ -74,7 +68,7 @@ public class CreatePoll2 extends Fragment
         comm = (Communicator) getActivity();
         listener = (ClickListener) getActivity();
         tvPollName = (TextView) getActivity().findViewById(R.id.tvPollName2);
-        dsraAdapter = new DragSelectRecyclerAdapter((ClickListener) getActivity());
+        dsraAdapter = new DragSelectRecyclerAdapterDays((ClickListener) getActivity());
         dsraAdapter.load();
         dsraAdapter.setSelectionListener(this);
         dsraAdapter.restoreInstanceState(savedInstanceState);
@@ -109,7 +103,7 @@ public class CreatePoll2 extends Fragment
     public DragSelectRecyclerView getDragSelectRecyclerView(){
         return dsrvDays;
     }
-    public DragSelectRecyclerAdapter getDragSelectRecyclerAdapter(){
+    public DragSelectRecyclerAdapterDays getDragSelectRecyclerAdapter(){
         return dsraAdapter;
     }
     @Override

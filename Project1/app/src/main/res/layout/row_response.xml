@@ -14,12 +14,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Participant"
-        android:id="@+id/tv_row_poll_creator"
+        android:text="Responder"
+        android:id="@+id/tv_row_responder"
         android:layout_alignTop="@+id/iv_profile_icon"
         android:layout_alignParentEnd="true"
         android:layout_toEndOf="@+id/iv_profile_icon"
         android:layout_alignBottom="@+id/iv_profile_icon"
         android:layout_alignParentStart="false" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Date Responded"
+        android:id="@+id/tv_date_responded"
+        android:layout_alignBottom="@+id/iv_profile_icon"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/iv_profile_icon" />
 
 </RelativeLayout>

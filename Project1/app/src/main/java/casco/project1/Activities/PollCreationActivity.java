@@ -1,21 +1,14 @@
 package casco.project1.Activities;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.Intent;
 import android.os.PersistableBundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -24,13 +17,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialcab.MaterialCab;
-
-import casco.project1.Adapters.DragSelectRecyclerAdapter;
-import casco.project1.Fragments.CreatePoll1;
-import casco.project1.Fragments.CreatePoll2;
-import casco.project1.Interfaces.ClickListener;
-import casco.project1.Interfaces.Communicator;
 import casco.project1.R;
 import casco.project1.dataBackend.Constants;
 import casco.project1.dataBackend.Poll;
@@ -40,6 +26,7 @@ public class PollCreationActivity extends AppCompatActivity
         implements View.OnClickListener
 {
     User currentUser;
+    TextView tvTest;
     TextView tvPollTitle;
     EditText tePollTitle;
     TextView tvPollDescription;
@@ -49,6 +36,12 @@ public class PollCreationActivity extends AppCompatActivity
     Spinner spinner2;
     public String pollName;
     public String pollDescription;
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,45 +69,47 @@ public class PollCreationActivity extends AppCompatActivity
         tePollDescription = (EditText) findViewById(R.id.teDescription);
         btnNext = (Button) findViewById(R.id.btnPart2);
         btnNext.setOnClickListener(this);
+        tvTest = (TextView) findViewById(R.id.tvTest);
         Bundle bundle = this.getIntent().getExtras();
-        if(bundle != null)
+        if(bundle != null){
             currentUser = Constants.loadUser(bundle);
+            tvTest.setText(currentUser.getName());
+        }
         else if (savedInstanceState != null)
         {
             pollName = savedInstanceState.getString(Constants.PollNameBundleKey);
             pollDescription = savedInstanceState.getString(Constants.PollDescBundleKey);
             currentUser = (User) savedInstanceState.getSerializable(Constants.UserBundleKey);
+            tvTest.setText(currentUser.getName());
+        }
+        else{
+            tvTest.setText("USER IS NULL");
         }
         pollName = bundle.getString(Constants.PollNameBundleKey,"");
         pollDescription = bundle.getString(Constants.PollDescBundleKey,"");
         btnNext.setEnabled(false);
 
+
         spinner1 = (Spinner) findViewById(R.id.spinner1);
-        // Create an ArrayAdapter using the string array and a default spinner layout
+        spinner2 = (Spinner) findViewById(R.id.spinner2);
+        setSpinners();
+    }
+    private void setSpinners(){
         ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this,
                 R.array.times_half_hour, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
         spinner1.setAdapter(adapter1);
         int spinnerPosition = adapter1.getPosition(Constants.TimesHalfHour[Constants.DefaultStartTimesHalfHour]);
-
-        //set the default according to value
         spinner1.setSelection(spinnerPosition);
 
-        spinner2 = (Spinner) findViewById(R.id.spinner2);
-        // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this,
                 R.array.times_half_hour, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
         spinner2.setAdapter(adapter2);
         spinnerPosition = adapter2.getPosition(Constants.TimesHalfHour[Constants.DefaultEndTimesHalfHour]);
-
-        //set the default according to value
         spinner2.setSelection(spinnerPosition);
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -153,13 +148,30 @@ public class PollCreationActivity extends AppCompatActivity
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(this, PollCreation2Activity.class);
-        Bundle b = new Bundle();
-        b.putSerializable(Constants.UserBundleKey, currentUser);
-        intent.putExtras(b);
-        intent.putExtra(Constants.PollNameBundleKey, pollName);
-        intent.putExtra(Constants.PollDescBundleKey, pollDescription);
+        if(spinner1.getSelectedItemPosition() >= spinner2.getSelectedItemPosition()){
+            Snackbar snackbar = Snackbar.make(
+                    v, "The start time needs to be later than the end time.",
+                    Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
+        else {
+            Intent intent = new Intent(this, PollCreation2Activity.class);
+            Bundle b = new Bundle();
 
-        startActivity(intent);
+            Poll newPoll = new Poll();
+            newPoll.setTitle(pollName);
+            newPoll.setDescription(pollDescription);
+            newPoll.setCreator(currentUser);
+//        intent.putExtra(Constants.PollNameBundleKey, pollName);
+//        intent.putExtra(Constants.PollDescBundleKey, pollDescription);
+            intent.putExtra(Constants.PollStartTimeBundleKey, spinner1.getSelectedItem().toString());
+            intent.putExtra(Constants.PollEndTimeBundleKey, spinner2.getSelectedItem().toString());
+
+            b.putSerializable(Constants.PollBundleKey, newPoll);
+            b.putSerializable(Constants.UserBundleKey, currentUser);
+            intent.putExtras(b);
+
+            startActivity(intent);
+        }
     }
 }

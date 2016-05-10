@@ -5,7 +5,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,13 +24,13 @@ import casco.project1.dataBackend.Constants;
 /**
  * Created by Stefan on 5/3/2016.
  */
-public class DragSelectRecyclerAdapter
-        extends DragSelectRecyclerViewAdapter<DragSelectRecyclerAdapter.MainViewHolder>
+public class DragSelectRecyclerAdapterDays
+        extends DragSelectRecyclerViewAdapter<DragSelectRecyclerAdapterDays.MainViewHolder>
 {
     ClickListener clickListener;
     List<String> labelList = new ArrayList<String>();
 
-    public DragSelectRecyclerAdapter(ClickListener callback){
+    public DragSelectRecyclerAdapterDays(ClickListener callback){
         super();
         clickListener = callback;
     }

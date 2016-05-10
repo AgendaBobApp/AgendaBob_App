@@ -75,5 +75,6 @@
         <item>11:00pm</item>
         <item>11:30pm</item>
     </string-array>
+    <string name="title_activity_poll_details">PollDetailsActivity</string>
 
 </resources>

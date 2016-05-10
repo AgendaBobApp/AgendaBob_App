@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,21 +24,48 @@ import casco.project1.dataBackend.Constants;
 /**
  * Created by christianmello on 5/9/16.
  */
-public class DragSelectRecyclerAdapter2
-        extends DragSelectRecyclerViewAdapter<DragSelectRecyclerAdapter2.MainViewHolder>
+public class DragSelectRecyclerAdapterTimes
+        extends DragSelectRecyclerViewAdapter<DragSelectRecyclerAdapterTimes.MainViewHolder>
 {
     ClickListener clickListener;
     List<String> labelList = new ArrayList<String>();
 
-    public DragSelectRecyclerAdapter2(ClickListener callback){
+    public DragSelectRecyclerAdapterTimes(ClickListener callback){
         super();
         clickListener = callback;
     }
-    public void load(){
-        labelList = new ArrayList<String>();
-        for(int i = 0; i< Constants.TimesHalfHour.length; i++)
-            labelList.add(Constants.TimesHalfHour[i]);
+    public void loadTimes(String start, String end){
+        Log.i("STEFAN", "START: "+start+" to END: "+end);
+        int startTimeIndex = getTimeIndex(start);
+        int endTimeIndex = getTimeIndex(end);
+        load(startTimeIndex,endTimeIndex);
     }
+    public void loadTimes(){
+        int startTimeIndex = Constants.DefaultStartTimesHalfHour;//getTimeIndex(start);
+        int endTimeIndex = Constants.DefaultEndTimesHalfHour;//getTimeIndex(end);
+        load(startTimeIndex,endTimeIndex);
+    }
+    private void load(int start, int end){
+        if (start < 0)
+            start = 0;
+        if (end > Constants.TimesHalfHour.length)
+            end = Constants.TimesHalfHour.length;
+        labelList = new ArrayList<String>();
+        for(int i = start; i < end; i++){
+            labelList.add(Constants.TimesHalfHour[i]);
+        }
+    }
+    private int getTimeIndex(String time){
+        for(int i = 0; i < Constants.TimesHalfHour.length;i++){
+            if(time.equals(Constants.TimesHalfHour[i])){
+                Log.i("STEFAN", "FOUND TIME "+time+" INDEX: "+i);
+                return i;
+            }
+        }
+        Log.i("STEFAN", "TIME NOT FOUND");
+        return 0;//-1
+    }
+
     public String getItem(int index){
         if (labelList.get(index) == null)
             return "BLAAAAAHH";

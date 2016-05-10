@@ -38,6 +38,12 @@ public class Poll implements Serializable{
         this.baseTime = baseTime;
         this.responses = responses;
     }
+    public void setShortCode(int sc){shortCode = sc;}
+    public void setCreator(User usr){creator = usr;}
+    public void setTitle(String t){title = t;}
+    public void setDescription(String desc){description = desc;}
+    public void setBaseTime(TimeSet ts){baseTime = ts;}
+    public void setResponses(List<Response> responses){responses = responses;}
 
     public int getShortCode() {
         return shortCode;

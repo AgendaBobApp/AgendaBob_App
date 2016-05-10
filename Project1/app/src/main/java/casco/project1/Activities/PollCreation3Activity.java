@@ -1,7 +1,6 @@
 package casco.project1.Activities;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,10 +16,11 @@ import com.afollestad.dragselectrecyclerview.DragSelectRecyclerView;
 import com.afollestad.dragselectrecyclerview.DragSelectRecyclerViewAdapter;
 import com.afollestad.materialcab.MaterialCab;
 
-import casco.project1.Adapters.DragSelectRecyclerAdapter2;
+import casco.project1.Adapters.DragSelectRecyclerAdapterTimes;
 import casco.project1.Interfaces.ClickListener;
 import casco.project1.R;
 import casco.project1.dataBackend.Constants;
+import casco.project1.dataBackend.Poll;
 import casco.project1.dataBackend.User;
 
 public class PollCreation3Activity
@@ -29,15 +29,24 @@ public class PollCreation3Activity
         View.OnClickListener, DragSelectRecyclerViewAdapter.SelectionListener
 {
     User currentUser;
-
-    TextView tvPollName;
+    Poll newPoll;
     String pollName;
     String pollDescription;
+    String timeStart;
+    String timeEnd;
+
+    TextView tvPollName;
     Button btnBack;
     Button btnCreate;
     DragSelectRecyclerView dsrvTimes;
-    DragSelectRecyclerAdapter2 dsraAdapter2;
+    DragSelectRecyclerAdapterTimes dsraAdapter2;
     MaterialCab cab;
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,42 +54,48 @@ public class PollCreation3Activity
         setContentView(R.layout.activity_poll_creation3);
 
         Bundle bundle = this.getIntent().getExtras();
-        if(bundle != null)
+        if(bundle != null) {
             currentUser = Constants.loadUser(bundle);
+            newPoll = (Poll) bundle.getSerializable(Constants.PollBundleKey);
+        }
         else if (savedInstanceState != null)
         {
             pollName = savedInstanceState.getString(Constants.PollNameBundleKey);
             pollDescription = savedInstanceState.getString(Constants.PollDescBundleKey);
             currentUser = (User) savedInstanceState.getSerializable(Constants.UserBundleKey);
+            newPoll = (Poll) savedInstanceState.getSerializable(Constants.PollBundleKey);
         }
+//        pollName = bundle.getString(Constants.PollNameBundleKey);
+//        pollDescription = bundle.getString(Constants.PollDescBundleKey);
+        timeStart = bundle.getString(Constants.PollStartTimeBundleKey);
+        timeEnd = bundle.getString(Constants.PollEndTimeBundleKey);
 
         tvPollName = (TextView) findViewById(R.id.tvPollName3);
-        dsraAdapter2 = new DragSelectRecyclerAdapter2(this);
-        dsraAdapter2.load();
+        dsraAdapter2 = new DragSelectRecyclerAdapterTimes(this);
+        if(timeStart != null && timeEnd!=null)
+            dsraAdapter2.loadTimes(timeStart, timeEnd);
+        else
+            dsraAdapter2.loadTimes();
         dsraAdapter2.setSelectionListener(this);
         dsraAdapter2.restoreInstanceState(savedInstanceState);
 
         dsrvTimes = (DragSelectRecyclerView) findViewById(R.id.dsrvTimes);
         dsrvTimes.setAdapter(dsraAdapter2);
         dsrvTimes.setLayoutManager(new LinearLayoutManager(this));
-        cab = MaterialCab.restoreState(
-                savedInstanceState, this, this);
-
+        cab = MaterialCab.restoreState(savedInstanceState, this, this);
         btnBack = (Button) findViewById(R.id.btnPart2);
         btnCreate = (Button) findViewById(R.id.btnCreate);
         btnBack.setOnClickListener(this);
         btnCreate.setOnClickListener(this);
-        pollName = bundle.getString(Constants.PollNameBundleKey);
-        pollDescription = bundle.getString(Constants.PollDescBundleKey);
-        tvPollName.setText(pollName);
-        btnCreate.setEnabled(false);
 
+        tvPollName.setText(newPoll.getTitle());
+        btnCreate.setEnabled(false);
     }
 
     public DragSelectRecyclerView getDragSelectRecyclerView(){
         return dsrvTimes;
     }
-    public DragSelectRecyclerAdapter2 getDragSelectRecyclerAdapter2(){
+    public DragSelectRecyclerAdapterTimes getDragSelectRecyclerAdapter2(){
         return dsraAdapter2;
     }
     @Override
