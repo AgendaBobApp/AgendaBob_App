@@ -39,6 +39,7 @@ public class PollCreation2Activity
     Button btnNext;
     DragSelectRecyclerView dsrvDays;
     DragSelectRecyclerAdapter dsraAdapter;
+    Integer[] selectedItems;
     MaterialCab cab;
 
     @Override
@@ -100,7 +101,8 @@ public class PollCreation2Activity
         else if(i < 1 && btnNext != null){
             btnNext.setEnabled(false);
         }
-        
+
+        selectedItems = dsraAdapter.getSelectedIndices();
     }
 
     @Override
@@ -123,6 +125,8 @@ public class PollCreation2Activity
         super.onRestoreInstanceState(savedInstanceState);
         pollName = savedInstanceState.getString(Constants.PollNameBundleKey);
         pollDescription = savedInstanceState.getString(Constants.PollDescBundleKey);
+        startTime = savedInstanceState.getInt("Starting Time");
+        endTime = savedInstanceState.getInt("Ending Time");
         currentUser = (User) savedInstanceState.getSerializable(Constants.UserBundleKey);
     }
     @Override
@@ -131,14 +135,6 @@ public class PollCreation2Activity
         {
             case R.id.btnPart1:
                 Log.i("STEFAN", "Clicked Back");
-                /*Intent intent1 = new Intent(this, PollCreationActivity.class);
-                Bundle b1 = new Bundle();
-                b1.putSerializable(Constants.UserBundleKey, currentUser);
-                intent1.putExtras(b1);
-                intent1.putExtra(Constants.PollNameBundleKey, pollName);
-                intent1.putExtra(Constants.PollDescBundleKey, pollDescription);
-
-                startActivity(intent1);*/
                 this.finish();
                 break;
             case R.id.btnPart3:
@@ -151,6 +147,7 @@ public class PollCreation2Activity
                 intent2.putExtra(Constants.PollDescBundleKey, pollDescription);
                 intent2.putExtra("Starting Time", startTime);
                 intent2.putExtra("Ending Time", endTime);
+                intent2.putExtra("DayList", selectedItems);
 
                 startActivity(intent2);
                 break;

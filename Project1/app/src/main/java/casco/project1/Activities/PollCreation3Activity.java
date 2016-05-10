@@ -129,26 +129,10 @@ public class PollCreation3Activity
         {
             case R.id.btnPart2:
                 Log.i("STEFAN", "Clicked Back");
-                /*Intent intent1 = new Intent(this, PollCreation2Activity.class);
-                Bundle b1 = new Bundle();
-                b1.putSerializable(Constants.UserBundleKey, currentUser);
-                intent1.putExtras(b1);
-                intent1.putExtra(Constants.PollNameBundleKey, pollName);
-                intent1.putExtra(Constants.PollDescBundleKey, pollDescription);
-
-                startActivity(intent1);*/
                 this.finish();
                 break;
             case R.id.btnCreate:
                 Log.i("STEFAN", "Clicked Create");
-                /*Intent intent2 = new Intent(this, PollCreation3Activity.class);
-                Bundle b2 = new Bundle();
-                b2.putSerializable(Constants.UserBundleKey, currentUser);
-                intent2.putExtras(b2);
-                intent2.putExtra(Constants.PollNameBundleKey, pollName);
-                intent2.putExtra(Constants.PollDescBundleKey, pollDescription);
-
-                startActivity(intent2);*/
                 Context context = getApplicationContext();
                 CharSequence text = "Poll (not really) created!";
                 int duration = Toast.LENGTH_SHORT;
