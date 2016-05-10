@@ -150,6 +150,11 @@ public class PollCreation2Activity
                 Log.i("STEFAN", "Clicked Next");
                 Intent intent2 = new Intent(this, PollCreation3Activity.class);
                 Bundle b2 = new Bundle();
+
+                for (Integer i: dsraAdapter.getSelectedIndices()) {
+                    //Log.i("FINDMEFINDMEFINDME","item("+ i +"): " + dsraAdapter.getItem(i));
+                    newPoll.getBaseTime().addDay(dsraAdapter.getItem(i));
+                }
                 b2.putSerializable(Constants.UserBundleKey, currentUser);
                 b2.putSerializable(Constants.PollBundleKey, newPoll);
                 intent2.putExtras(b2);

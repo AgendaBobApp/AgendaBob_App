@@ -97,11 +97,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
 
-        try {
+        /*try {
             poll_serialization();
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
 
     }
     public void loadUser(Bundle bundle){
@@ -143,6 +143,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Intent intent= new Intent(this, PollDetailsActivity.class);
         Bundle b = new Bundle();
         b.putSerializable(Constants.UserBundleKey, currentUser);
+        //Poll p = new Poll();
+        Poll p = polls.get(position);
+        b.putSerializable(Constants.PollBundleKey, p);
         intent.putExtras(b);
         intent.putExtra("PollName", polls.get(position).getTitle());
         intent.putExtra("PollCreator", polls.get(position).getCreator().getName());

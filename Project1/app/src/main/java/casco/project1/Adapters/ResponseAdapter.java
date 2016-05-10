@@ -14,6 +14,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import casco.project1.R;
@@ -24,18 +25,14 @@ import casco.project1.dataBackend.User;
  * Created by Stefan on 4/30/2016.
  */
 public class ResponseAdapter extends BaseAdapter {
-    ArrayList<Response> list;
-    User currentUser;
+    List<Response> list;
     Context context;
-    public ResponseAdapter(Context c, User current){
+    public ResponseAdapter(Context c, List<Response> current){
         context = c;
-        currentUser=current;
-        list = new ArrayList<Response>();
-        list.add(new Response(currentUser, new Date()));
+        list = current;
     }
     public ResponseAdapter(Context c){
         context = c;
-        currentUser=null;
         list = new ArrayList<Response>();
         list.add(new Response(new User(), new Date()));
     }

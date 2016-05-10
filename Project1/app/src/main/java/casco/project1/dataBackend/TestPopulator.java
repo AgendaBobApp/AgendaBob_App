@@ -1,5 +1,6 @@
 package casco.project1.dataBackend;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,7 +13,7 @@ import casco.project1.R;
 /**
  * Created by Stefan on 5/2/2016.
  */
-public class TestPopulator {
+public class TestPopulator implements Serializable{
     int pollID = 0;
     int userID = 0;
     int partID = 0;
