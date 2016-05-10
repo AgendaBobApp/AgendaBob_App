@@ -121,14 +121,15 @@ public class PollCreation2Activity
         {
             case R.id.btnPart1:
                 Log.i("STEFAN", "Clicked Back");
-                Intent intent1 = new Intent(this, PollCreationActivity.class);
+                /*Intent intent1 = new Intent(this, PollCreationActivity.class);
                 Bundle b1 = new Bundle();
                 b1.putSerializable(Constants.UserBundleKey, currentUser);
                 intent1.putExtras(b1);
                 intent1.putExtra(Constants.PollNameBundleKey, pollName);
                 intent1.putExtra(Constants.PollDescBundleKey, pollDescription);
 
-                startActivity(intent1);
+                startActivity(intent1);*/
+                this.finish();
                 break;
             case R.id.btnPart3:
                 Log.i("STEFAN", "Clicked Next");
