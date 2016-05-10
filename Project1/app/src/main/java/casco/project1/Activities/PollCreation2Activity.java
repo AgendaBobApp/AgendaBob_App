@@ -33,12 +33,22 @@ public class PollCreation2Activity
     TextView tvPollName;
     String pollName;
     String pollDescription;
+<<<<<<< HEAD
     String timeStart;
     String timeEnd;
     Button btnBack;
     Button btnNext;
     DragSelectRecyclerView dsrvDays;
     DragSelectRecyclerAdapterDays dsraAdapter;
+=======
+    int startTime;
+    int endTime;
+    Button btnBack;
+    Button btnNext;
+    DragSelectRecyclerView dsrvDays;
+    DragSelectRecyclerAdapter dsraAdapter;
+    Integer[] selectedItems;
+>>>>>>> 250b708afe3d51aa686680b623ac2e7e3da3220e
     MaterialCab cab;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -61,6 +71,8 @@ public class PollCreation2Activity
         {
             pollName = savedInstanceState.getString(Constants.PollNameBundleKey);
             pollDescription = savedInstanceState.getString(Constants.PollDescBundleKey);
+            startTime = savedInstanceState.getInt("Starting Time");
+            endTime = savedInstanceState.getInt("Ending Time");
             currentUser = (User) savedInstanceState.getSerializable(Constants.UserBundleKey);
             newPoll = (Poll) savedInstanceState.getSerializable(Constants.PollBundleKey);
 
@@ -82,13 +94,23 @@ public class PollCreation2Activity
         btnNext = (Button) findViewById(R.id.btnPart3);
         btnBack.setOnClickListener(this);
         btnNext.setOnClickListener(this);
+<<<<<<< HEAD
 //        pollName = bundle.getString(Constants.PollNameBundleKey);
 //        pollDescription = bundle.getString(Constants.PollDescBundleKey);
         timeStart = bundle.getString(Constants.PollStartTimeBundleKey);
         timeEnd = bundle.getString(Constants.PollEndTimeBundleKey);
         tvPollName.setText(newPoll.getTitle());
+=======
+        pollName = bundle.getString(Constants.PollNameBundleKey);
+        pollDescription = bundle.getString(Constants.PollDescBundleKey);
+        startTime = bundle.getInt("Starting Time");
+        endTime = bundle.getInt("Ending Time");
+        tvPollName.setText(pollName);
+>>>>>>> 250b708afe3d51aa686680b623ac2e7e3da3220e
         btnNext.setEnabled(false);
 
+        System.out.println("Activity 2: " + startTime);
+        System.out.println("Activity 2: " + endTime);
     }
 
     public DragSelectRecyclerView getDragSelectRecyclerView(){
@@ -106,7 +128,8 @@ public class PollCreation2Activity
         else if(i < 1 && btnNext != null){
             btnNext.setEnabled(false);
         }
-        
+
+        selectedItems = dsraAdapter.getSelectedIndices();
     }
 
     @Override
@@ -115,7 +138,12 @@ public class PollCreation2Activity
         outState.putString(Constants.PollNameBundleKey, pollName);
         outState.putString(Constants.PollDescBundleKey, pollDescription);
         outState.putSerializable(Constants.UserBundleKey, currentUser);
+<<<<<<< HEAD
         outState.putSerializable(Constants.PollBundleKey, newPoll);
+=======
+        outState.putInt("Starting Time", startTime);
+        outState.putInt("Ending Time", endTime);
+>>>>>>> 250b708afe3d51aa686680b623ac2e7e3da3220e
         if (dsraAdapter != null) {
             dsraAdapter.saveInstanceState(outState);
         }
@@ -128,6 +156,8 @@ public class PollCreation2Activity
         super.onRestoreInstanceState(savedInstanceState);
         pollName = savedInstanceState.getString(Constants.PollNameBundleKey);
         pollDescription = savedInstanceState.getString(Constants.PollDescBundleKey);
+        startTime = savedInstanceState.getInt("Starting Time");
+        endTime = savedInstanceState.getInt("Ending Time");
         currentUser = (User) savedInstanceState.getSerializable(Constants.UserBundleKey);
         newPoll = (Poll) savedInstanceState.getSerializable(Constants.PollBundleKey);
     }
@@ -137,14 +167,6 @@ public class PollCreation2Activity
         {
             case R.id.btnPart1:
                 Log.i("STEFAN", "Clicked Back");
-                /*Intent intent1 = new Intent(this, PollCreationActivity.class);
-                Bundle b1 = new Bundle();
-                b1.putSerializable(Constants.UserBundleKey, currentUser);
-                intent1.putExtras(b1);
-                intent1.putExtra(Constants.PollNameBundleKey, pollName);
-                intent1.putExtra(Constants.PollDescBundleKey, pollDescription);
-
-                startActivity(intent1);*/
                 this.finish();
                 break;
             case R.id.btnPart3:
@@ -154,10 +176,18 @@ public class PollCreation2Activity
                 b2.putSerializable(Constants.UserBundleKey, currentUser);
                 b2.putSerializable(Constants.PollBundleKey, newPoll);
                 intent2.putExtras(b2);
+<<<<<<< HEAD
 //                intent2.putExtra(Constants.PollNameBundleKey, pollName);
 //                intent2.putExtra(Constants.PollDescBundleKey, pollDescription);
                 intent2.putExtra(Constants.PollStartTimeBundleKey, timeStart);
                 intent2.putExtra(Constants.PollEndTimeBundleKey, timeEnd);
+=======
+                intent2.putExtra(Constants.PollNameBundleKey, pollName);
+                intent2.putExtra(Constants.PollDescBundleKey, pollDescription);
+                intent2.putExtra("Starting Time", startTime);
+                intent2.putExtra("Ending Time", endTime);
+                intent2.putExtra("DayList", selectedItems);
+>>>>>>> 250b708afe3d51aa686680b623ac2e7e3da3220e
 
                 startActivity(intent2);
                 break;

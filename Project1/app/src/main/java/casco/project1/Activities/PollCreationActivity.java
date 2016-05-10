@@ -10,6 +10,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,6 +37,9 @@ public class PollCreationActivity extends AppCompatActivity
     Spinner spinner2;
     public String pollName;
     public String pollDescription;
+    public int startTime;
+    public int endTime;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -85,10 +89,8 @@ public class PollCreationActivity extends AppCompatActivity
         else{
             tvTest.setText("USER IS NULL");
         }
-        pollName = bundle.getString(Constants.PollNameBundleKey,"");
-        pollDescription = bundle.getString(Constants.PollDescBundleKey,"");
-        btnNext.setEnabled(false);
 
+        btnNext.setEnabled(false);
 
         spinner1 = (Spinner) findViewById(R.id.spinner1);
         spinner2 = (Spinner) findViewById(R.id.spinner2);
@@ -99,15 +101,18 @@ public class PollCreationActivity extends AppCompatActivity
                 R.array.times_half_hour, android.R.layout.simple_spinner_item);
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner1.setAdapter(adapter1);
+
         int spinnerPosition = adapter1.getPosition(Constants.TimesHalfHour[Constants.DefaultStartTimesHalfHour]);
         spinner1.setSelection(spinnerPosition);
-
         ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this,
                 R.array.times_half_hour, android.R.layout.simple_spinner_item);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner2.setAdapter(adapter2);
+
         spinnerPosition = adapter2.getPosition(Constants.TimesHalfHour[Constants.DefaultEndTimesHalfHour]);
         spinner2.setSelection(spinnerPosition);
+        int spinnerPosition2 = adapter2.getPosition(Constants.TimesHalfHour[Constants.DefaultEndTimesHalfHour]);
+        spinner2.setSelection(spinnerPosition2);
     }
 
     @Override
@@ -143,6 +148,8 @@ public class PollCreationActivity extends AppCompatActivity
         outState.putString(Constants.PollNameBundleKey, pollName);
         outState.putString(Constants.PollDescBundleKey, pollDescription);
         outState.putSerializable(Constants.UserBundleKey, currentUser);
+        outState.putInt("Starting Time", startTime);
+        outState.putInt("Ending Time", endTime);
         super.onSaveInstanceState(outState, outPersistentState);
     }
 
@@ -166,7 +173,6 @@ public class PollCreationActivity extends AppCompatActivity
 //        intent.putExtra(Constants.PollDescBundleKey, pollDescription);
             intent.putExtra(Constants.PollStartTimeBundleKey, spinner1.getSelectedItem().toString());
             intent.putExtra(Constants.PollEndTimeBundleKey, spinner2.getSelectedItem().toString());
-
             b.putSerializable(Constants.PollBundleKey, newPoll);
             b.putSerializable(Constants.UserBundleKey, currentUser);
             intent.putExtras(b);

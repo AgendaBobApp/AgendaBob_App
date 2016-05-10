@@ -25,8 +25,13 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+<<<<<<< HEAD
         android:id="@+id/lv_polls"
         android:layout_below="@+id/tvTest"/>
+=======
+        android:layout_below="@id/tvTest"
+        android:id="@+id/lv_polls" />
+>>>>>>> 250b708afe3d51aa686680b623ac2e7e3da3220e
 
 
 </RelativeLayout>
