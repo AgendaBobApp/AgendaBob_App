@@ -38,7 +38,6 @@ import casco.project1.dataBackend.Poll;
 import casco.project1.dataBackend.Response;
 import casco.project1.dataBackend.Serializier;
 import casco.project1.dataBackend.TestPopulator;
-import casco.project1.dataBackend.TimeRange;
 import casco.project1.dataBackend.TimeSet;
 import casco.project1.dataBackend.User;
 
@@ -207,15 +206,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         String d = "supercalifragilisticexpialidocious";
 
-        List<TimeRange> ltr = new ArrayList<TimeRange>();
-        ltr.add(new TimeRange(new Date(2016 - 1900, 4, 9), new Date(2016 - 1900, 4, 10)));
-        ltr.add(new TimeRange(new Date(2016 - 1900, 4, 11), new Date(2016 - 1900, 4, 12)));
-        ltr.add(new TimeRange(new Date(2016 - 1900, 4, 13), new Date(2016 - 1900, 4, 14)));
-        TimeSet ts = new TimeSet(ltr);
+        TimeSet ts = new TimeSet();
 
         List<Response> r = new ArrayList<Response>();
-        r.add(new Response(ltr, new User("Bert"), new Date()));
-        r.add(new Response(ltr, new User("Mr. Banks"), new Date()));
 
         Poll poll = new Poll(c, u, t, d, ts, r);
 

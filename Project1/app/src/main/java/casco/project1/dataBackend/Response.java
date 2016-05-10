@@ -35,13 +35,6 @@ public class Response extends TimeSet implements Serializable {
         this.date = date;
     }
 
-    public Response (List<TimeRange> times, User creator, Date date) {
-        // create a response based on provided time ranges
-        super(times);
-        this.creator = creator;
-        this.date = date;
-    }
-
     public User getCreator() { return creator; }
 
     public Date getDate() { return date; }
