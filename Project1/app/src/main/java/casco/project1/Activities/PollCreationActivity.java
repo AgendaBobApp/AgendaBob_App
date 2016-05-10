@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -49,6 +50,9 @@ public class PollCreationActivity extends AppCompatActivity
     Spinner spinner2;
     public String pollName;
     public String pollDescription;
+    public int startTime;
+    public int endTime;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,10 +101,23 @@ public class PollCreationActivity extends AppCompatActivity
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         spinner1.setAdapter(adapter1);
-        int spinnerPosition = adapter1.getPosition(Constants.TimesHalfHour[Constants.DefaultStartTimesHalfHour]);
+        int spinnerPosition1 = adapter1.getPosition(Constants.TimesHalfHour[Constants.DefaultStartTimesHalfHour]);
 
         //set the default according to value
-        spinner1.setSelection(spinnerPosition);
+        spinner1.setSelection(spinnerPosition1);
+
+        int spinner_pos1 = spinner1.getSelectedItemPosition();
+        startTime = spinner_pos1;
+        System.out.println(startTime);
+
+        spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                startTime = pos;
+                System.out.println(startTime);
+            }
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
 
         spinner2 = (Spinner) findViewById(R.id.spinner2);
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -110,10 +127,23 @@ public class PollCreationActivity extends AppCompatActivity
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         spinner2.setAdapter(adapter2);
-        spinnerPosition = adapter2.getPosition(Constants.TimesHalfHour[Constants.DefaultEndTimesHalfHour]);
+        int spinnerPosition2 = adapter2.getPosition(Constants.TimesHalfHour[Constants.DefaultEndTimesHalfHour]);
 
         //set the default according to value
-        spinner2.setSelection(spinnerPosition);
+        spinner2.setSelection(spinnerPosition2);
+
+        int spinner_pos2 = spinner2.getSelectedItemPosition();
+        endTime = spinner_pos2;
+        System.out.println(endTime);
+
+        spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                endTime = pos;
+                System.out.println(endTime);
+            }
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
     }
     @Override
     public void onResume() {
@@ -148,6 +178,8 @@ public class PollCreationActivity extends AppCompatActivity
         outState.putString(Constants.PollNameBundleKey, pollName);
         outState.putString(Constants.PollDescBundleKey, pollDescription);
         outState.putSerializable(Constants.UserBundleKey, currentUser);
+        outState.putInt("Starting Time", startTime);
+        outState.putInt("Ending Time", endTime);
         super.onSaveInstanceState(outState, outPersistentState);
     }
 
@@ -159,6 +191,8 @@ public class PollCreationActivity extends AppCompatActivity
         intent.putExtras(b);
         intent.putExtra(Constants.PollNameBundleKey, pollName);
         intent.putExtra(Constants.PollDescBundleKey, pollDescription);
+        intent.putExtra("Starting Time", startTime);
+        intent.putExtra("Ending Time", endTime);
 
         startActivity(intent);
     }

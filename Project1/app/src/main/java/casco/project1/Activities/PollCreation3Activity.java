@@ -33,6 +33,8 @@ public class PollCreation3Activity
     TextView tvPollName;
     String pollName;
     String pollDescription;
+    int startTime;
+    int endTime;
     Button btnBack;
     Button btnCreate;
     DragSelectRecyclerView dsrvTimes;
@@ -52,11 +54,15 @@ public class PollCreation3Activity
             pollName = savedInstanceState.getString(Constants.PollNameBundleKey);
             pollDescription = savedInstanceState.getString(Constants.PollDescBundleKey);
             currentUser = (User) savedInstanceState.getSerializable(Constants.UserBundleKey);
+            startTime = savedInstanceState.getInt("Starting Time");
+            endTime = savedInstanceState.getInt("Ending Time");
         }
 
         tvPollName = (TextView) findViewById(R.id.tvPollName3);
         dsraAdapter2 = new DragSelectRecyclerAdapter2(this);
-        dsraAdapter2.load();
+        startTime = bundle.getInt("Starting Time");
+        endTime = bundle.getInt("Ending Time");
+        dsraAdapter2.load(startTime, endTime);
         dsraAdapter2.setSelectionListener(this);
         dsraAdapter2.restoreInstanceState(savedInstanceState);
 
@@ -75,6 +81,8 @@ public class PollCreation3Activity
         tvPollName.setText(pollName);
         btnCreate.setEnabled(false);
 
+        System.out.println("Activity 3: " + startTime);
+        System.out.println("Activity 3: " + endTime);
     }
 
     public DragSelectRecyclerView getDragSelectRecyclerView(){

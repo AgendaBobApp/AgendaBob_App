@@ -33,9 +33,9 @@ public class DragSelectRecyclerAdapter2
         super();
         clickListener = callback;
     }
-    public void load(){
+    public void load(int startTime, int endTime){
         labelList = new ArrayList<String>();
-        for(int i = 0; i< Constants.TimesHalfHour.length; i++)
+        for(int i = startTime; i < endTime + 1; i++)
             labelList.add(Constants.TimesHalfHour[i]);
     }
     public String getItem(int index){

@@ -33,6 +33,8 @@ public class PollCreation2Activity
     TextView tvPollName;
     String pollName;
     String pollDescription;
+    int startTime;
+    int endTime;
     Button btnBack;
     Button btnNext;
     DragSelectRecyclerView dsrvDays;
@@ -51,6 +53,8 @@ public class PollCreation2Activity
         {
             pollName = savedInstanceState.getString(Constants.PollNameBundleKey);
             pollDescription = savedInstanceState.getString(Constants.PollDescBundleKey);
+            startTime = savedInstanceState.getInt("Starting Time");
+            endTime = savedInstanceState.getInt("Ending Time");
             currentUser = (User) savedInstanceState.getSerializable(Constants.UserBundleKey);
         }
 
@@ -72,9 +76,13 @@ public class PollCreation2Activity
         btnNext.setOnClickListener(this);
         pollName = bundle.getString(Constants.PollNameBundleKey);
         pollDescription = bundle.getString(Constants.PollDescBundleKey);
+        startTime = bundle.getInt("Starting Time");
+        endTime = bundle.getInt("Ending Time");
         tvPollName.setText(pollName);
         btnNext.setEnabled(false);
 
+        System.out.println("Activity 2: " + startTime);
+        System.out.println("Activity 2: " + endTime);
     }
 
     public DragSelectRecyclerView getDragSelectRecyclerView(){
@@ -101,6 +109,8 @@ public class PollCreation2Activity
         outState.putString(Constants.PollNameBundleKey, pollName);
         outState.putString(Constants.PollDescBundleKey, pollDescription);
         outState.putSerializable(Constants.UserBundleKey, currentUser);
+        outState.putInt("Starting Time", startTime);
+        outState.putInt("Ending Time", endTime);
         if (dsraAdapter != null) {
             dsraAdapter.saveInstanceState(outState);
         }
@@ -139,6 +149,8 @@ public class PollCreation2Activity
                 intent2.putExtras(b2);
                 intent2.putExtra(Constants.PollNameBundleKey, pollName);
                 intent2.putExtra(Constants.PollDescBundleKey, pollDescription);
+                intent2.putExtra("Starting Time", startTime);
+                intent2.putExtra("Ending Time", endTime);
 
                 startActivity(intent2);
                 break;
