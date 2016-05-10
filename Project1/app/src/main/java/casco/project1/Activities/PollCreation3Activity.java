@@ -32,15 +32,10 @@ public class PollCreation3Activity
     Poll newPoll;
     String pollName;
     String pollDescription;
-<<<<<<< HEAD
     String timeStart;
     String timeEnd;
 
     TextView tvPollName;
-=======
-    int startTime;
-    int endTime;
->>>>>>> 250b708afe3d51aa686680b623ac2e7e3da3220e
     Button btnBack;
     Button btnCreate;
     DragSelectRecyclerView dsrvTimes;
@@ -68,12 +63,7 @@ public class PollCreation3Activity
             pollName = savedInstanceState.getString(Constants.PollNameBundleKey);
             pollDescription = savedInstanceState.getString(Constants.PollDescBundleKey);
             currentUser = (User) savedInstanceState.getSerializable(Constants.UserBundleKey);
-<<<<<<< HEAD
             newPoll = (Poll) savedInstanceState.getSerializable(Constants.PollBundleKey);
-=======
-            startTime = savedInstanceState.getInt("Starting Time");
-            endTime = savedInstanceState.getInt("Ending Time");
->>>>>>> 250b708afe3d51aa686680b623ac2e7e3da3220e
         }
 //        pollName = bundle.getString(Constants.PollNameBundleKey);
 //        pollDescription = bundle.getString(Constants.PollDescBundleKey);
@@ -81,18 +71,11 @@ public class PollCreation3Activity
         timeEnd = bundle.getString(Constants.PollEndTimeBundleKey);
 
         tvPollName = (TextView) findViewById(R.id.tvPollName3);
-<<<<<<< HEAD
         dsraAdapter2 = new DragSelectRecyclerAdapterTimes(this);
         if(timeStart != null && timeEnd!=null)
             dsraAdapter2.loadTimes(timeStart, timeEnd);
         else
             dsraAdapter2.loadTimes();
-=======
-        dsraAdapter2 = new DragSelectRecyclerAdapter2(this);
-        startTime = bundle.getInt("Starting Time");
-        endTime = bundle.getInt("Ending Time");
-        dsraAdapter2.load(startTime, endTime);
->>>>>>> 250b708afe3d51aa686680b623ac2e7e3da3220e
         dsraAdapter2.setSelectionListener(this);
         dsraAdapter2.restoreInstanceState(savedInstanceState);
 
@@ -105,13 +88,8 @@ public class PollCreation3Activity
         btnBack.setOnClickListener(this);
         btnCreate.setOnClickListener(this);
 
-<<<<<<< HEAD
         tvPollName.setText(newPoll.getTitle());
         btnCreate.setEnabled(false);
-=======
-        System.out.println("Activity 3: " + startTime);
-        System.out.println("Activity 3: " + endTime);
->>>>>>> 250b708afe3d51aa686680b623ac2e7e3da3220e
     }
 
     public DragSelectRecyclerView getDragSelectRecyclerView(){

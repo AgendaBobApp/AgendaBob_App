@@ -34,7 +34,6 @@ public class DragSelectRecyclerAdapterTimes
         super();
         clickListener = callback;
     }
-<<<<<<< HEAD:Project1/app/src/main/java/casco/project1/Adapters/DragSelectRecyclerAdapterTimes.java
     public void loadTimes(String start, String end){
         Log.i("STEFAN", "START: "+start+" to END: "+end);
         int startTimeIndex = getTimeIndex(start);
@@ -53,11 +52,6 @@ public class DragSelectRecyclerAdapterTimes
             end = Constants.TimesHalfHour.length;
         labelList = new ArrayList<String>();
         for(int i = start; i < end; i++){
-=======
-    public void load(int startTime, int endTime){
-        labelList = new ArrayList<String>();
-        for(int i = startTime; i < endTime + 1; i++)
->>>>>>> 250b708afe3d51aa686680b623ac2e7e3da3220e:Project1/app/src/main/java/casco/project1/Adapters/DragSelectRecyclerAdapter2.java
             labelList.add(Constants.TimesHalfHour[i]);
         }
     }
