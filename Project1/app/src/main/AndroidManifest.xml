@@ -37,6 +37,7 @@
             android:name=".Activities.PollRespondActivity"
             android:label="Respond"
             android:parentActivityName=".Activities.PollDetailsActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -46,6 +47,7 @@
             android:name=".Activities.PollResultsActivity"
             android:label="Results"
             android:parentActivityName=".Activities.PollDetailsActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -62,12 +64,15 @@
         <activity
             android:name=".Activities.PollCreationActivity"
             android:label="New Poll: 1"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activities.PollCreation2Activity"
+            android:screenOrientation="portrait"
             android:label="New Poll: 2" />
         <activity
             android:name=".Activities.PollCreation3Activity"
+            android:screenOrientation="portrait"
             android:label="New Poll: 3" />
     </application>
 
