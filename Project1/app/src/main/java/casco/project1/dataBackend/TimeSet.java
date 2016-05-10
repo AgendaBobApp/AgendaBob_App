@@ -10,6 +10,7 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Holds information about a response to a given poll
@@ -17,33 +18,45 @@ import java.util.Set;
  *      Such as create a Response that is a composite of a set of responses
  */
 public class TimeSet implements Serializable{
-    protected Dictionary<String, List<String>> times;
+    protected Dictionary<String, Set<String>> times;
 
     public TimeSet() {
-        this.times  = new Hashtable<String, List<String>>();
+        this.times  = new Hashtable<String, Set<String>>();
     }
 
-    public void setWholeDictionary(Dictionary<String, List<String>> d) {
+    public void setWholeDictionary(Dictionary<String, Set<String>> d) {
         times = d;
     }
 
-    public Dictionary<String, List<String>> getTimes() {
+    public Dictionary<String, Set<String>> getTimes() {
         return times;
     }
 
     public void addDay(String day) {
-        times.put(day, new ArrayList<String>());
+        times.put(day, new TreeSet<String>());
     }
 
     public void addTimeToDay(String day, String time) {
         times.get(day).add(time);
     }
 
+    // cant really be used with other addtimes
+    // this will reset the value for given key!!!!!!!!!!!!!
     public void addDayTimes(String day, List<String> list) {
-        times.put(day, list);
+        times.put(day, new TreeSet<String>(list));
     }
 
-    public List<String> getDayTimes(String day) {
+    // cant really be used with other addtimes
+    // this will reset the value for given key!!!!!!!!!!!!!
+    public void addDayTimes(String day, Set<String> set) {
+        times.put(day, set);
+    }
+
+    public List<String> getDayTimesList(String day) {
+        return new ArrayList<String>(times.get(day));
+    }
+
+    public Set<String> getDayTimesSet(String day) {
         return times.get(day);
     }
 }
