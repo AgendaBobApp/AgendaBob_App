@@ -24,10 +24,10 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
 
-    compile('com.github.afollestad:material-cab:0.1.11@aar') {
+    compile('com.afollestad:material-cab:0.1.12@aar') {
         transitive = true
     }
-    compile('com.github.afollestad:drag-select-recyclerview:0.3.5@aar') {
+    compile('com.afollestad:drag-select-recyclerview:0.3.5@aar') {
         transitive = true
     }
     compile 'com.android.support:appcompat-v7:23.3.0'
