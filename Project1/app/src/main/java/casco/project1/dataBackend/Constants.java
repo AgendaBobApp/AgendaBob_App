@@ -30,8 +30,10 @@ public class Constants {
         User currentUser = new User();
         if (bundle != null) {
             currentUser = (User) bundle.getSerializable(Constants.UserBundleKey);
-            if(currentUser == null)
+            if(currentUser == null) {
                 Log.i("STEFAN", "Bundle was not null, but user was.");
+                currentUser = new User();
+            }
             else
                 Log.i("STEFAN", "User passed from other activity");
         }
