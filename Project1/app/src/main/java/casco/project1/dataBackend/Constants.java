@@ -18,6 +18,8 @@ public class Constants {
     public static final String[] WeekDays = {
             "Monday", "Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"
     };
+    public static final int DefaultStartTimesHalfHour = 16;
+    public static final int DefaultEndTimesHalfHour = 40;
     public static final String[] TimesHalfHour = {
             "12:00am", "12:30am", "1:00am", "1:30am", "2:00am", "2:30am", "3:00am", "3:30am",
             "4:00am", "4:30am", "5:00am", "5:30am", "6:00am", "6:30am", "7:00am", "7:30am",

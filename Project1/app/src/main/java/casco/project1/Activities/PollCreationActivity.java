@@ -97,6 +97,10 @@ public class PollCreationActivity extends AppCompatActivity
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         spinner1.setAdapter(adapter1);
+        int spinnerPosition = adapter1.getPosition(Constants.TimesHalfHour[Constants.DefaultStartTimesHalfHour]);
+
+        //set the default according to value
+        spinner1.setSelection(spinnerPosition);
 
         spinner2 = (Spinner) findViewById(R.id.spinner2);
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -106,6 +110,10 @@ public class PollCreationActivity extends AppCompatActivity
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         spinner2.setAdapter(adapter2);
+        spinnerPosition = adapter2.getPosition(Constants.TimesHalfHour[Constants.DefaultEndTimesHalfHour]);
+
+        //set the default according to value
+        spinner2.setSelection(spinnerPosition);
     }
     @Override
     public void onResume() {
