@@ -16,11 +16,14 @@ import com.afollestad.dragselectrecyclerview.DragSelectRecyclerView;
 import com.afollestad.dragselectrecyclerview.DragSelectRecyclerViewAdapter;
 import com.afollestad.materialcab.MaterialCab;
 
+import java.io.FileOutputStream;
+
 import casco.project1.Adapters.DragSelectRecyclerAdapterTimes;
 import casco.project1.Interfaces.ClickListener;
 import casco.project1.R;
 import casco.project1.dataBackend.Constants;
 import casco.project1.dataBackend.Poll;
+import casco.project1.dataBackend.Serializier;
 import casco.project1.dataBackend.User;
 
 public class PollCreation3Activity
@@ -146,6 +149,26 @@ public class PollCreation3Activity
 
                 Toast toast = Toast.makeText(context, text, duration);
                 toast.show();
+
+                // Add the selected times to the poll
+                newPoll.getBaseTime().addDay("Monday");
+
+                for(Integer index: getDragSelectRecyclerAdapter2().getSelectedIndices())
+                {
+                    newPoll.getBaseTime().addTimeToDay("Monday", getDragSelectRecyclerAdapter2().getItem(index));
+                }
+                getDragSelectRecyclerAdapter2().clearSelected();
+
+                // Save the new poll to file
+                String fileName = "poll.poll";
+                FileOutputStream fos;
+                try {
+                    fos = openFileOutput(fileName, Context.MODE_PRIVATE);
+                    Serializier.serialize(fos, newPoll);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 break;
             case R.id.dsrvTimes:
                 Log.i("STEFAN", "Selected Recycler");
@@ -191,6 +214,7 @@ public class PollCreation3Activity
                 sb.append(getDragSelectRecyclerAdapter2().getItem(index));
                 traverse++;
             }
+            Log.i("CHANG", sb.toString());
             getDragSelectRecyclerAdapter2().clearSelected();
             return true;
         }

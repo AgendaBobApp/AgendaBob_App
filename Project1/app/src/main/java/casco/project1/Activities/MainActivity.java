@@ -74,6 +74,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         TestPopulator data = new TestPopulator();
         polls = data.polls;
 
+        // Get polls from file
+        Poll depoll = null;
+        FileInputStream fis;
+        String[] files = fileList();
+        if (files.length > 0) {
+            for (String file : files) {
+                try {
+                    fis = openFileInput(file);
+                    depoll = (Poll) Serializier.deserialize(fis);
+                    polls.add(depoll);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         lvPolls = (ListView) findViewById(R.id.lv_polls);
         lvPolls.setAdapter(new PollAdapter(this, data));
         lvPolls.setOnItemClickListener(this);
@@ -228,11 +244,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // deserialize file
         Poll depoll = null;
         FileInputStream fis;
-        try {
-            fis = openFileInput(fileName);
-            depoll = (Poll) Serializier.deserialize(fis);
-        } catch (Exception e) {
-            e.printStackTrace();
+        String[] files = fileList();
+        for (String file : files) {
+            try {
+                fis = openFileInput(file);
+                depoll = (Poll) Serializier.deserialize(fis);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         Log.i("SERIAL TEST", "code: " + depoll.getShortCode());
