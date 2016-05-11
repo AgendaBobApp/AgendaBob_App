@@ -145,7 +145,7 @@ public class PollCreation3Activity
             case R.id.btnCreate:
                 Log.i("STEFAN", "Clicked Create");
                 Context context = getApplicationContext();
-                CharSequence text = "Poll (not really) created!";
+                CharSequence text = "Poll created!";
                 int duration = Toast.LENGTH_SHORT;
 
                 Toast toast = Toast.makeText(context, text, duration);
