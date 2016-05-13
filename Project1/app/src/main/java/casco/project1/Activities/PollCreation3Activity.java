@@ -23,6 +23,7 @@ import casco.project1.Adapters.DragSelectRecyclerAdapterTimes;
 import casco.project1.Interfaces.ClickListener;
 import casco.project1.R;
 import casco.project1.dataBackend.Constants;
+import casco.project1.dataBackend.LocalDataStore;
 import casco.project1.dataBackend.Poll;
 import casco.project1.dataBackend.Serializier;
 import casco.project1.dataBackend.User;
@@ -160,15 +161,8 @@ public class PollCreation3Activity
                 }
                 getDragSelectRecyclerAdapter2().clearSelected();
 
-                // Save the new poll to file
-                String fileName = newPoll.getTitle() + ".poll";
-                FileOutputStream fos;
-                try {
-                    fos = openFileOutput(fileName, Context.MODE_PRIVATE);
-                    Serializier.serialize(fos, newPoll);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                LocalDataStore populator = new LocalDataStore();
+                populator.savePoll(context, newPoll);
 
                 // Go back to the Home Screen
                 Intent intent = new Intent(this, MainActivity.class);
