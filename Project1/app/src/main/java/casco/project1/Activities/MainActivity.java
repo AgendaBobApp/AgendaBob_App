@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -192,6 +193,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             test = (TextView) findViewById(R.id.tvTest);
+            //ImageView prof = (ImageView) findViewById(R.id.iv_profile_icon);
             String personName = acct.getDisplayName();
             String personEmail = acct.getEmail();
             String personId = acct.getId();

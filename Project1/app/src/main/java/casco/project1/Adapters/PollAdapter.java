@@ -2,6 +2,7 @@ package casco.project1.Adapters;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,6 +61,8 @@ public class PollAdapter extends BaseAdapter {
         TextView poll = (TextView) row.findViewById(R.id.tv_row_poll);
         TextView creator = (TextView) row.findViewById(R.id.tv_row_poll_creator);
         ImageView image = (ImageView) row.findViewById(R.id.iv_profile_icon);
+        //if (image != null)
+        //image.setImageURI(Uri.fromFile(new File("android.resource://casco.Project1/" + R.drawable.ic_person_blue)));
         poll.setText(polls.get(position).getTitle());
         creator.setText(polls.get(position).getCreator().getName());
         //image.setImageResource(polls.get(position).getCreator().getImage());
