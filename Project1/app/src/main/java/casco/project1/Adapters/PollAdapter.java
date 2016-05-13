@@ -33,6 +33,10 @@ public class PollAdapter extends BaseAdapter {
         polls = data.polls;
 
     }
+    public PollAdapter(Context c, List<Poll> data) {
+        context = c;
+        polls = data;
+    }
     @Override
     public int getCount() {
 

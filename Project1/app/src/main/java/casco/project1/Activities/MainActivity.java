@@ -35,6 +35,7 @@ import casco.project1.DisplayPreferences;
 import casco.project1.Adapters.PollAdapter;
 import casco.project1.R;
 import casco.project1.dataBackend.Constants;
+import casco.project1.dataBackend.LocalDataStore;
 import casco.project1.dataBackend.Poll;
 import casco.project1.dataBackend.Response;
 import casco.project1.dataBackend.Serializier;
@@ -72,32 +73,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
-        TestPopulator data = new TestPopulator();
-        polls = data.polls;
-
-        // Get polls from file
-        Poll depoll = null;
-        FileInputStream fis;
-        String[] files = fileList();
-        if (files.length > 0) {
-            for (String file : files) {
-                Log.d("CHANG", "Filename: " + file);
-                try {
-                    fis = openFileInput(file);
-                    depoll = (Poll) Serializier.deserialize(fis);
-                    Log.d("CHANG", "Before adding the poll.");
-                    polls.add(depoll);
-                    Log.d("CHANG", "After adding the poll.");
-                } catch (Exception e) {
-                    Log.d("CHANG", "Are we in the catch block?");
-                    Log.d("CHANG", e.toString());
-                    e.printStackTrace();
-                }
-            }
-        }
+        LocalDataStore populator = new LocalDataStore();
+        polls = populator.loadAllPolls(getApplicationContext());
 
         lvPolls = (ListView) findViewById(R.id.lv_polls);
-        lvPolls.setAdapter(new PollAdapter(this, data));
+        lvPolls.setAdapter(new PollAdapter(this, polls));
         lvPolls.setOnItemClickListener(this);
         Bundle bundle = this.getIntent().getExtras();
         //loadUser(bundle);
