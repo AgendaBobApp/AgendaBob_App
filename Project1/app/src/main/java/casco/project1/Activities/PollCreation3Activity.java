@@ -166,7 +166,7 @@ public class PollCreation3Activity
 
                 // Go back to the Home Screen
                 Intent intent = new Intent(this, MainActivity.class);
-                intent.setFlags(Constants.ClearBackstackFlags);
+                intent.addFlags(Constants.ClearBackstackFlags);
                 startActivity(intent);
                 finish();
 
