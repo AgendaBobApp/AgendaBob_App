@@ -44,25 +44,29 @@ Our goals are to remedy these problems by integrating both use cases into a sing
 
 ### Roadmap
 
-Overall, start with just getting super basic WhenIsGood-like functionality, because primary goal is to develop an effective mobile UI.  This means:
-  - Creating a poll
-  - Selecting multiple timeslots from the list
-  - Showing the selections
+Finished Tasks:
 
-Other functions can be folded in later:
-  - Doodle-like single-timeslot selection, and associated poll options during creation
-  - Tutorials, potentially.  If UI is good, maybe we don't need them.
-  - Invite-only vs. public (aka just need the code)
+  - Home Page
+  - Creating a Poll
+  - Drag-Select works in a single activity
+  - Google Sign-in on the app
 
-Eventually:
-  - Other common login options, like Facebook
-  - Develop for other devices/web
+Up Next:
+  - Tabbed activity for multiple poll days
+  - Clearing backstack when finished creating poll
+  - Fetching Google account info, primarily Picture
+  - Basic Google App Engine framework
+  - Responding to a poll
+  - Viewing poll results
 
-Start with dummy prototypes for:
+Down the Road:
+  - Backend authentication for fetching poll info
+  - Backend code to store polls
+  - Poll ID generation: generate in GAE, send back for storing in Poll.  Need some async stuff here.
+  - Clear local data store on logout.
 
-  - Drag-select on a list, show selections
-  - Fragment swapping
-  - Calendar import/export
-  - Google Login
-
-Then, integrate the pieces, and make it pretty.
+Stretch Goals:
+  - Implement polls with specific dates rather than a generic week
+  - Implement Doodle-like single-selct polls.
+  - Other login options, like Facebook
+  - Web Interface, accomplish same task, but for desktop.
