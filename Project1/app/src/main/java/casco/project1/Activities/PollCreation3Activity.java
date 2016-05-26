@@ -17,7 +17,11 @@ import com.afollestad.dragselectrecyclerview.DragSelectRecyclerView;
 import com.afollestad.dragselectrecyclerview.DragSelectRecyclerViewAdapter;
 import com.afollestad.materialcab.MaterialCab;
 
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import casco.project1.Adapters.DragSelectRecyclerAdapterTimes;
 import casco.project1.Interfaces.ClickListener;
@@ -40,6 +44,7 @@ public class PollCreation3Activity
     String timeEnd;
     List<String> pollDays;
     Integer currentDay;
+    Dictionary<String, Set<String>> selectedTimes;
 
     TextView tvPollDay;
     Button btnBack;
@@ -78,6 +83,7 @@ public class PollCreation3Activity
         timeStart = bundle.getString(Constants.PollStartTimeBundleKey);
         timeEnd = bundle.getString(Constants.PollEndTimeBundleKey);
         pollDays = bundle.getStringArrayList(Constants.PollDaysBundleKey);
+        selectedTimes = new Hashtable<>();
 
         tvPollDay = (TextView) findViewById(R.id.tvPollDay);
         dsraAdapter2 = new DragSelectRecyclerAdapterTimes(this);
@@ -107,6 +113,8 @@ public class PollCreation3Activity
         btnCreatePrev.setVisibility(View.INVISIBLE);
         btnCreateNext = (Button) findViewById(R.id.btnCreateNext);
         btnCreateNext.setText(pollDays.get(1));
+        btnCreatePrev.setOnClickListener(this);
+        btnCreateNext.setOnClickListener(this);
     }
 
     public DragSelectRecyclerView getDragSelectRecyclerView(){
@@ -118,6 +126,7 @@ public class PollCreation3Activity
     @Override
     public void onDragSelectionChanged(int i) {
         Log.i("STEFAN", "NUM ITEMS OR ITEM SELECTED?: " + i);
+
         if(i > 0 && btnCreate != null){
             btnCreate.setEnabled(true);
         }
@@ -147,6 +156,56 @@ public class PollCreation3Activity
         pollDescription = savedInstanceState.getString(Constants.PollDescBundleKey);
         currentUser = (User) savedInstanceState.getSerializable(Constants.UserBundleKey);
     }
+
+    public void saveTimes(String day) {
+        selectedTimes.put(day, new TreeSet<String>());
+        Integer[] times = dsraAdapter2.getSelectedIndices();
+        for (Integer i: times) {
+            selectedTimes.get(day).add(dsraAdapter2.getItem(i));
+        }
+    }
+
+    public void changeDay(String direction) {
+        // Save selection as list
+        saveTimes(pollDays.get(currentDay));
+
+        // Clear list selections
+        dsraAdapter2.clearSelected();
+        dsrvTimes.scrollToPosition(0);
+
+        // Tick over current day
+        if (direction == "next") {
+            currentDay++;
+        } else if (direction == "prev") {
+            currentDay--;
+        }
+
+        // Update main text
+        tvPollDay.setText(pollDays.get(currentDay));
+
+        // If last day, hide next button
+        if (currentDay == pollDays.size() - 1) {
+            btnCreateNext.setVisibility(View.INVISIBLE);
+        } else {
+            // Otherwise, un-hide it and set new text
+            if (btnCreateNext.getVisibility() == View.INVISIBLE) {
+                btnCreateNext.setVisibility(View.VISIBLE);
+            }
+            btnCreateNext.setText(pollDays.get(currentDay + 1));
+        }
+
+        // If first day, hide prev button
+        if (currentDay == 0) {
+            btnCreatePrev.setVisibility(View.INVISIBLE);
+        } else {
+            // Otherwise, un-hide it and set new text
+            if (btnCreatePrev.getVisibility() == View.INVISIBLE) {
+                btnCreatePrev.setVisibility(View.VISIBLE);
+            }
+            btnCreatePrev.setText(pollDays.get(currentDay - 1));
+        }
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId())
@@ -164,14 +223,19 @@ public class PollCreation3Activity
                 Toast toast = Toast.makeText(context, text, duration);
                 toast.show();
 
-                // Add the selected times to the poll
-                newPoll.getBaseTime().addDay("Monday");
+                // Save the current day
+                saveTimes(pollDays.get(currentDay));
 
-                for(Integer index: getDragSelectRecyclerAdapter2().getSelectedIndices())
-                {
-                    newPoll.getBaseTime().addTimeToDay("Monday", getDragSelectRecyclerAdapter2().getItem(index));
+                // Add the selected times to the poll
+                for (String day: pollDays) {
+                    if (selectedTimes.get(day) == null) {
+                        Log.d("CHANG", "No times selected for day: " + day);
+                        newPoll.getBaseTime().addDayTimes(day, new TreeSet<String>());
+                    } else {
+                        Log.d("CHANG", "Times selected for day: " + day);
+                        newPoll.getBaseTime().addDayTimes(day, selectedTimes.get(day));
+                    }
                 }
-                getDragSelectRecyclerAdapter2().clearSelected();
 
                 LocalDataStore populator = new LocalDataStore();
                 populator.savePoll(context, newPoll);
@@ -186,6 +250,12 @@ public class PollCreation3Activity
             case R.id.dsrvTimes:
                 Log.i("STEFAN", "Selected Recycler");
 
+                break;
+            case R.id.btnCreatePrev:
+                changeDay("prev");
+                break;
+            case R.id.btnCreateNext:
+                changeDay("next");
                 break;
             default:
                 Log.e("Error","WTF just happened?!");
