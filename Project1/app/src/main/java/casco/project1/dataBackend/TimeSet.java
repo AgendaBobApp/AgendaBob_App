@@ -7,6 +7,7 @@ package casco.project1.dataBackend;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Dictionary;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
@@ -58,5 +59,16 @@ public class TimeSet implements Serializable{
 
     public Set<String> getDayTimesSet(String day) {
         return times.get(day);
+    }
+
+    public List<String> getDayList() {
+        List<String> days = new ArrayList<>();
+        for (String day: Constants.WeekDays) {
+            if (times.get(day) != null) {
+                days.add(day);
+            }
+        }
+
+        return days;
     }
 }

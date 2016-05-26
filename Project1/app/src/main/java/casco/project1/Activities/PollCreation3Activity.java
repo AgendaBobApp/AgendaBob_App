@@ -17,7 +17,7 @@ import com.afollestad.dragselectrecyclerview.DragSelectRecyclerView;
 import com.afollestad.dragselectrecyclerview.DragSelectRecyclerViewAdapter;
 import com.afollestad.materialcab.MaterialCab;
 
-import java.io.FileOutputStream;
+import java.util.List;
 
 import casco.project1.Adapters.DragSelectRecyclerAdapterTimes;
 import casco.project1.Interfaces.ClickListener;
@@ -25,7 +25,6 @@ import casco.project1.R;
 import casco.project1.dataBackend.Constants;
 import casco.project1.dataBackend.LocalDataStore;
 import casco.project1.dataBackend.Poll;
-import casco.project1.dataBackend.Serializier;
 import casco.project1.dataBackend.User;
 
 public class PollCreation3Activity
@@ -39,10 +38,14 @@ public class PollCreation3Activity
     String pollDescription;
     String timeStart;
     String timeEnd;
+    List<String> pollDays;
+    Integer currentDay;
 
-    TextView tvPollName;
+    TextView tvPollDay;
     Button btnBack;
     Button btnCreate;
+    Button btnCreatePrev;
+    Button btnCreateNext;
     DragSelectRecyclerView dsrvTimes;
     DragSelectRecyclerAdapterTimes dsraAdapter2;
     MaterialCab cab;
@@ -74,8 +77,9 @@ public class PollCreation3Activity
 //        pollDescription = bundle.getString(Constants.PollDescBundleKey);
         timeStart = bundle.getString(Constants.PollStartTimeBundleKey);
         timeEnd = bundle.getString(Constants.PollEndTimeBundleKey);
+        pollDays = bundle.getStringArrayList(Constants.PollDaysBundleKey);
 
-        tvPollName = (TextView) findViewById(R.id.tvPollName3);
+        tvPollDay = (TextView) findViewById(R.id.tvPollDay);
         dsraAdapter2 = new DragSelectRecyclerAdapterTimes(this);
         if(timeStart != null && timeEnd!=null)
             dsraAdapter2.loadTimes(timeStart, timeEnd);
@@ -93,8 +97,16 @@ public class PollCreation3Activity
         btnBack.setOnClickListener(this);
         btnCreate.setOnClickListener(this);
 
-        tvPollName.setText(newPoll.getTitle());
+        // Set current day view
+        tvPollDay.setText(pollDays.get(0));
+        currentDay = 0;
         btnCreate.setEnabled(false);
+
+        // Prev/Next day buttons
+        btnCreatePrev = (Button) findViewById(R.id.btnCreatePrev);
+        btnCreatePrev.setVisibility(View.INVISIBLE);
+        btnCreateNext = (Button) findViewById(R.id.btnCreateNext);
+        btnCreateNext.setText(pollDays.get(1));
     }
 
     public DragSelectRecyclerView getDragSelectRecyclerView(){

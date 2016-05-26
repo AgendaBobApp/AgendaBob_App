@@ -15,6 +15,11 @@ import com.afollestad.dragselectrecyclerview.DragSelectRecyclerView;
 import com.afollestad.dragselectrecyclerview.DragSelectRecyclerViewAdapter;
 import com.afollestad.materialcab.MaterialCab;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import casco.project1.Adapters.DragSelectRecyclerAdapterDays;
 import casco.project1.Interfaces.ClickListener;
 import casco.project1.R;
@@ -151,17 +156,27 @@ public class PollCreation2Activity
                 Intent intent2 = new Intent(this, PollCreation3Activity.class);
                 Bundle b2 = new Bundle();
 
-                for (Integer i: dsraAdapter.getSelectedIndices()) {
+                // Add days to bundle
+                Integer[] selectedDays = dsraAdapter.getSelectedIndices();
+                Arrays.sort(selectedDays);
+                ArrayList<String> days = new ArrayList<>();
+                for (Integer i: selectedDays) {
                     //Log.i("FINDMEFINDMEFINDME","item("+ i +"): " + dsraAdapter.getItem(i));
-                    newPoll.getBaseTime().addDay(dsraAdapter.getItem(i));
+                    //newPoll.getBaseTime().addDay(dsraAdapter.getItem(i));
+                    days.add(dsraAdapter.getItem(i));
                 }
+                b2.putStringArrayList(Constants.PollDaysBundleKey, days);
+
                 b2.putSerializable(Constants.UserBundleKey, currentUser);
                 b2.putSerializable(Constants.PollBundleKey, newPoll);
+
                 intent2.putExtras(b2);
 //                intent2.putExtra(Constants.PollNameBundleKey, pollName);
 //                intent2.putExtra(Constants.PollDescBundleKey, pollDescription);
                 intent2.putExtra(Constants.PollStartTimeBundleKey, timeStart);
                 intent2.putExtra(Constants.PollEndTimeBundleKey, timeEnd);
+
+
 
                 startActivity(intent2);
                 break;
@@ -210,6 +225,7 @@ public class PollCreation2Activity
                 traverse++;
             }
             getDragSelectRecyclerAdapter().clearSelected();
+            Log.d("CHANG", "Day selection cleared!");
             return true;
         }
         return false;
