@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,8 +50,10 @@ public class PollCreation3Activity
     TextView tvPollDay;
     Button btnBack;
     Button btnCreate;
-    Button btnCreatePrev;
-    Button btnCreateNext;
+    ImageButton ibCreatePrev;
+    ImageButton ibCreateNext;
+    Button btnClearAll;
+    Button btnSelectAll;
     DragSelectRecyclerView dsrvTimes;
     DragSelectRecyclerAdapterTimes dsraAdapter2;
     MaterialCab cab;
@@ -109,12 +112,19 @@ public class PollCreation3Activity
         btnCreate.setEnabled(false);
 
         // Prev/Next day buttons
-        btnCreatePrev = (Button) findViewById(R.id.btnCreatePrev);
-        btnCreatePrev.setVisibility(View.INVISIBLE);
-        btnCreateNext = (Button) findViewById(R.id.btnCreateNext);
-        btnCreateNext.setText(pollDays.get(1));
-        btnCreatePrev.setOnClickListener(this);
-        btnCreateNext.setOnClickListener(this);
+        ibCreatePrev = (ImageButton) findViewById(R.id.btnCreatePrev);
+        ibCreatePrev.setVisibility(View.INVISIBLE);
+        ibCreateNext = (ImageButton) findViewById(R.id.btnCreateNext);
+        //ibCreateNext.setText(pollDays.get(1));
+        ibCreatePrev.setOnClickListener(this);
+        ibCreateNext.setOnClickListener(this);
+
+        btnClearAll = (Button) findViewById(R.id.btnClearAll);
+        btnSelectAll = (Button) findViewById(R.id.btnSelectAll);
+        btnClearAll.setOnClickListener(this);
+        btnSelectAll.setOnClickListener(this);
+
+        selectAll();
     }
 
     public DragSelectRecyclerView getDragSelectRecyclerView(){
@@ -165,6 +175,16 @@ public class PollCreation3Activity
         }
     }
 
+    public void clearAll() {
+        dsraAdapter2.clearSelected();
+    }
+
+    public void selectAll() {
+        for (Integer i = 0; i < dsraAdapter2.getItemCount(); i++) {
+            dsraAdapter2.setSelected(i, true);
+        }
+    }
+
     public void changeDay(String direction) {
         // Save selection as list
         saveTimes(pollDays.get(currentDay));
@@ -185,24 +205,36 @@ public class PollCreation3Activity
 
         // If last day, hide next button
         if (currentDay == pollDays.size() - 1) {
-            btnCreateNext.setVisibility(View.INVISIBLE);
+            ibCreateNext.setVisibility(View.INVISIBLE);
         } else {
             // Otherwise, un-hide it and set new text
-            if (btnCreateNext.getVisibility() == View.INVISIBLE) {
-                btnCreateNext.setVisibility(View.VISIBLE);
+            if (ibCreateNext.getVisibility() == View.INVISIBLE) {
+                ibCreateNext.setVisibility(View.VISIBLE);
             }
-            btnCreateNext.setText(pollDays.get(currentDay + 1));
+            //ibCreateNext.setText(pollDays.get(currentDay + 1));
         }
 
         // If first day, hide prev button
         if (currentDay == 0) {
-            btnCreatePrev.setVisibility(View.INVISIBLE);
+            ibCreatePrev.setVisibility(View.INVISIBLE);
         } else {
             // Otherwise, un-hide it and set new text
-            if (btnCreatePrev.getVisibility() == View.INVISIBLE) {
-                btnCreatePrev.setVisibility(View.VISIBLE);
+            if (ibCreatePrev.getVisibility() == View.INVISIBLE) {
+                ibCreatePrev.setVisibility(View.VISIBLE);
             }
-            btnCreatePrev.setText(pollDays.get(currentDay - 1));
+            //ibCreatePrev.setText(pollDays.get(currentDay - 1));
+        }
+
+        // Repopulate selected indices
+        Set<String> times = selectedTimes.get(pollDays.get(currentDay));
+        if (times != null) {
+            for (Integer i = 0; i < dsraAdapter2.getItemCount(); i++) {
+                if (times.contains(dsraAdapter2.getItem(i))) {
+                    dsraAdapter2.setSelected(i, true);
+                }
+            }
+        } else {
+            selectAll();
         }
     }
 
@@ -231,6 +263,9 @@ public class PollCreation3Activity
                     if (selectedTimes.get(day) == null) {
                         Log.d("CHANG", "No times selected for day: " + day);
                         newPoll.getBaseTime().addDayTimes(day, new TreeSet<String>());
+                        for (Integer i = 0; i < dsraAdapter2.getItemCount(); i++) {
+                            newPoll.getBaseTime().addTimeToDay(day, dsraAdapter2.getItem(i));
+                        }
                     } else {
                         Log.d("CHANG", "Times selected for day: " + day);
                         newPoll.getBaseTime().addDayTimes(day, selectedTimes.get(day));
@@ -256,6 +291,12 @@ public class PollCreation3Activity
                 break;
             case R.id.btnCreateNext:
                 changeDay("next");
+                break;
+            case R.id.btnClearAll:
+                clearAll();
+                break;
+            case R.id.btnSelectAll:
+                selectAll();
                 break;
             default:
                 Log.e("Error","WTF just happened?!");
