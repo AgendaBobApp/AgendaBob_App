@@ -13,7 +13,7 @@ import java.util.List;
 public class LocalDataStore {
     public boolean savePoll(Context c, Poll poll) {
         // Using filename for now; should use unique ID later
-        String fileName = poll.getTitle() + ".poll";
+        String fileName = poll.getTitle() + ".new";
         //String fileName = poll.getShortCode() + ".poll";
 
         FileOutputStream fos;
@@ -48,9 +48,11 @@ public class LocalDataStore {
 
         if (files.length > 0) {
             for (String file : files) {
-                newPoll = loadPoll(c, file);
-                if (newPoll != null) {
-                    polls.add(newPoll);
+                if (file.endsWith(".poll") || file.endsWith(".new")) {
+                    newPoll = loadPoll(c, file);
+                    if (newPoll != null) {
+                        polls.add(newPoll);
+                    }
                 }
             }
         }
