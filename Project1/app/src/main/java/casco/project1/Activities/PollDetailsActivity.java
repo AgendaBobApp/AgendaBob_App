@@ -14,6 +14,7 @@ import android.widget.Toast;
 import casco.project1.Adapters.ResponseAdapter;
 import casco.project1.R;
 import casco.project1.dataBackend.Constants;
+import casco.project1.dataBackend.LocalDataStore;
 import casco.project1.dataBackend.Poll;
 import casco.project1.dataBackend.User;
 
@@ -24,6 +25,7 @@ public class PollDetailsActivity extends AppCompatActivity implements AdapterVie
     ListView lvResponses;
     Button btnRespond;
     Button btnViewResults;
+    Button btnRemovePoll;
     TextView tvTest;
     User currentUser;
     Poll poll;
@@ -66,6 +68,7 @@ public class PollDetailsActivity extends AppCompatActivity implements AdapterVie
 
         btnRespond = (Button) findViewById(R.id.btn_respond);
         btnViewResults = (Button) findViewById(R.id.btn_view_results);
+        btnRemovePoll = (Button) findViewById(R.id.btn_remove_poll);
 
         lvResponses = (ListView) findViewById(R.id.lv_responses);
         lvResponses.setAdapter(new ResponseAdapter(this, poll.getResponses()));
@@ -85,5 +88,15 @@ public class PollDetailsActivity extends AppCompatActivity implements AdapterVie
     public void viewRespond(View view) {
         Intent intent = new Intent(this, PollRespondActivity.class);
         startActivity(intent);
+    }
+
+    public void deletePoll(View view) {
+        LocalDataStore populator = new LocalDataStore();
+        populator.removePoll(getApplicationContext(), poll);
+
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Constants.ClearBackstackFlags);
+        startActivity(intent);
+        finish();
     }
 }

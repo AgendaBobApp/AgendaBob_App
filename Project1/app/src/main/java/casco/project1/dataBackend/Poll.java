@@ -14,6 +14,7 @@ import java.util.List;
  */
 public class Poll implements Serializable{
     private int shortCode; // id for the poll
+    private String longCode; // GAE id of poll
     private User creator; // user that created the poll
     private String title; // name of the poll
     private String description; // description of the poll
@@ -39,6 +40,7 @@ public class Poll implements Serializable{
         this.responses = responses;
     }
     public void setShortCode(int sc){shortCode = sc;}
+    public void setLongCode(String lc) {longCode = lc;}
     public void setCreator(User usr){creator = usr;}
     public void setTitle(String t){title = t;}
     public void setDescription(String desc){description = desc;}
@@ -48,6 +50,8 @@ public class Poll implements Serializable{
     public int getShortCode() {
         return shortCode;
     }
+
+    public String getLongCode() { return longCode; }
 
     public User getCreator() {
         return creator;

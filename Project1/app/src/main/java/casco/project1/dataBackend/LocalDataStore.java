@@ -1,7 +1,9 @@
 package casco.project1.dataBackend;
 
 import android.content.Context;
+import android.util.Log;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ public class LocalDataStore {
         // Using filename for now; should use unique ID later
         String fileName = poll.getTitle() + ".new";
         //String fileName = poll.getShortCode() + ".poll";
+        poll.setLongCode(poll.getTitle());
 
         FileOutputStream fos;
         try {
@@ -58,5 +61,14 @@ public class LocalDataStore {
         }
 
         return polls;
+    }
+
+    public void removePoll(Context c, Poll p) {
+        String baseFileName = p.getLongCode();
+
+        File oldFile = c.getFileStreamPath(baseFileName + ".poll");
+        File newFile = c.getFileStreamPath(baseFileName + ".remove");
+        oldFile.renameTo(newFile);
+        Log.d("CHANG", "Removed poll with name: " + baseFileName);
     }
 }
