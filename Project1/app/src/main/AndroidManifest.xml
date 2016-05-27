@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="casco.project1">
+    package="casco.project1" >
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
         <activity
             android:name=".Activities.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,7 +26,7 @@
             android:label="Preferences"
             android:parentActivityName=".Activities.MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activities.MainActivity" />
@@ -38,7 +40,7 @@
             android:label="Respond"
             android:parentActivityName=".Activities.PollDetailsActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activities.PollDetailsActivity" />
@@ -48,7 +50,7 @@
             android:label="Results"
             android:parentActivityName=".Activities.PollDetailsActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activities.PollDetailsActivity" />
@@ -68,12 +70,12 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activities.PollCreation2Activity"
-            android:screenOrientation="portrait"
-            android:label="New Poll: 2" />
+            android:label="New Poll: 2"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.PollCreation3Activity"
-            android:screenOrientation="portrait"
-            android:label="New Poll: 3" />
+            android:label="New Poll: 3"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
