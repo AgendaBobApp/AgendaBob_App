@@ -4,23 +4,23 @@ package com.example.Stefan.myapplication.backend;
  * Created by Stefan on 5/24/2016.
  */
 public class Constants {
-
-    public static final String CreateUserKey = "createUser";
-    public static final String CreatePollKey = "createPoll";
-    public static final String PurgeUsersKey = "purgeUsers";
-    public static final String PurgePollsKey = "purgePolls";
+    // constants related to poll and pollGroup
+    public static final String PollID = "key";
+    public static final String PollGroup = "group";
+    public static final String PollModDate = "date";
     public static final String UserNameKey = "username";
-    public static final String PollNameKey = "pollname";
-    public static final String PollDescKey = "polldesc";
-    public static final String PollCreatorKey = "pollcreator";
-
-    public static final String AllUsersGroup = "allusers";
+    public static final String ActiveUsers = "userset";
+    public static final String Poll = "poll";
     public static final String AllPollsGroup = "allpolls";
-//    public static String Key = "";
-    public static Long ID = new Long(1);
-    public static Long getNewID(){
-        Long myID = new Long(ID);
-        ID++;
-        return myID;
-    }
+
+    // constants related to user and userGroup
+    public static final String AllUsersGroup = "allusers";
+
+    // operations poll and pollGroup
+    public static final String CreatePollKey = "createPoll";
+    public static final String PurgePollsKey = "purgePolls";
+
+    // operations user and userGroup
+    public static final String CreateUserKey = "createUser";
+    public static final String PurgeUsersKey = "purgeUsers";
 }

@@ -6,6 +6,8 @@
 
 package com.example.Stefan.myapplication.backend;
 
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -13,8 +15,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
 import javax.servlet.http.*;
 
 public class MyServlet extends HttpServlet {
@@ -84,30 +88,67 @@ public class MyServlet extends HttpServlet {
             pm.close();
         }
     }
+
     private void handleCreatePoll(HttpServletRequest req, PrintWriter out, PersistenceManager pm) {
         try {
-            String poll = req.getParameter(Constants.PollNameKey);
-            String desc = req.getParameter(Constants.PollDescKey);
-            String creator = req.getParameter(Constants.PollCreatorKey);
-            //String timeset = req.getParameter(Constants.PollNameKey);
+            String user = req.getParameter(Constants.UserNameKey);
+            if (user == null || user.length() == 0){
+                throw new IllegalArgumentException("Invalid user \""+ user+"\"");
+            }
+
+            String poll = req.getParameter(Constants.Poll);
             if (poll == null || poll.length() == 0){
                 throw new IllegalArgumentException("Invalid poll Name \""+ poll+"\"");
             }
-            if (desc == null)
-                desc = "No Description.";
-            if (creator == null)
-                creator = "God.";
-            Poll newPoll = new Poll();
 
             // we could have multiple groups, each group locked separately,
-            // but let's just have one for this demo; create if not exists
+            // but let's just have one for this project; create if not exists
             PollGroup group = PollGroup.create(Constants.AllPollsGroup, pm);
+
+            Poll newPoll = new Poll();
             newPoll.setEntityGroup(group.getKey());
-            newPoll.setName(poll);
-            newPoll.setDescription(desc);
-            newPoll.setCreator(creator);
+            newPoll.updateDate();
+            newPoll.addUser(user);
+            newPoll.setSerialPoll(poll);
+
             pm.makePersistent(newPoll);
             out.write(formatAsJson(newPoll));
+            //out.write(newPoll.getID());
+        } catch (IllegalArgumentException iae) {
+            out.write(formatAsJson(iae));
+        } finally {
+            pm.close();
+        }
+    }
+
+    private void handleGetPolls(HttpServletRequest req, PrintWriter out, PersistenceManager pm) {
+        try {
+            String user = req.getParameter(Constants.UserNameKey);
+            if (user == null || user.length() == 0){
+                throw new IllegalArgumentException("Invalid user \""+ user+"\"");
+            }
+
+            Query q = pm.newQuery("SELECT FROM Poll WHERE activeUsers == activeUsersParm parameters String activeUsersParm");
+            List<Poll> results = (List<Poll>) q.execute(user);
+            results.size();
+
+            out.write(formatAsJson(results));
+        } catch (IllegalArgumentException iae) {
+            out.write(formatAsJson(iae));
+        } finally {
+            pm.close();
+        }
+    }
+
+    private void handleGetPoll(HttpServletRequest req, PrintWriter out, PersistenceManager pm) {
+        try {
+            String pollID = req.getParameter(Constants.PollID);
+            if (pollID == null || pollID.length() == 0){
+                throw new IllegalArgumentException("Invalid key \""+ pollID+"\"");
+            }
+
+            Poll poll = pm.getObjectById(Poll.class, pollID);
+            out.write(formatAsJson(poll));
         } catch (IllegalArgumentException iae) {
             out.write(formatAsJson(iae));
         } finally {
@@ -135,25 +176,34 @@ public class MyServlet extends HttpServlet {
     }
     public static String formatAsJson(Poll poll) {
         HashMap<String, String> obj = new HashMap<String, String>();
-        obj.put("name", poll.getName());
-        obj.put("creator", poll.getCreator());
-        obj.put("description", poll.getDescription());
+        obj.put(Constants.PollID, poll.getID().toString());
+        obj.put(Constants.PollGroup, poll.getEntityGroup().toString());
+        obj.put(Constants.PollModDate, poll.getModifiedDate().toString());
+        obj.put(Constants.ActiveUsers, poll.getActiveUsers().toString());
+        obj.put(Constants.Poll, poll.getSerialPoll());
+
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
+
         String rv = gson.toJson(obj);
         return rv;
     }
+    public static String formatAsJson(List<Poll> results) {
+        HashMap<String, HashMap<String, String>> obj = new HashMap<String, HashMap<String, String>>();
+        for (Poll poll : results) {
+            HashMap<String, String> innerObj = new HashMap<String, String>();
+            innerObj.put(Constants.PollID, poll.getID().toString());
+            innerObj.put(Constants.PollGroup, poll.getEntityGroup().toString());
+            innerObj.put(Constants.PollModDate, poll.getModifiedDate().toString());
+            innerObj.put(Constants.ActiveUsers, poll.getActiveUsers().toString());
+            innerObj.put(Constants.Poll, poll.getSerialPoll());
+            obj.put(poll.getID().toString(), innerObj);
+        }
 
-//    public static String formatAsJson(Course course) {
-//        HashMap<String, String> obj = new HashMap<String, String>();
-//        obj.put("id", Long.toString(course.getId()));
-//        obj.put("title", course.getTitle());
-//        obj.put("description", course.getDescription());
-//        obj.put("modified", Long.toString(course.getLastModified() != null ? course.getLastModified().getTime() : 0L));
-//
-//        GsonBuilder builder = new GsonBuilder();
-//        Gson gson = builder.create();
-//        String rv = gson.toJson(obj);
-//        return rv;
-//    }
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+
+        String rv = gson.toJson(obj);
+        return rv;
+    }
 }
