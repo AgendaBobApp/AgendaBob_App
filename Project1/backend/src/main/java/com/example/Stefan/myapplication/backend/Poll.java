@@ -3,6 +3,9 @@ package com.example.Stefan.myapplication.backend;
 import com.google.appengine.api.datastore.Key;
 
 import java.io.Serializable;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -24,37 +27,16 @@ public class Poll implements Serializable{
     private Key entityGroup;
 
     @Persistent
-    private String name;
+    private Date modifiedDate;
 
     @Persistent
-    private String description;
+    private Set<String> activeUsers;
 
     @Persistent
-    private String creator;
+    private String serialPoll;
 
     public Key getID() {
         return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return name;
-    }
-    public void setDescription(String desc) {
-        this.description = desc;
-    }
-
-    public String getCreator() {
-        return creator;
-    }
-    public void setCreator(String creator) {
-        this.creator = creator;
     }
 
     public void setEntityGroup(Key entityGroup) {
@@ -62,5 +44,33 @@ public class Poll implements Serializable{
     }
     public Key getEntityGroup() {
         return entityGroup;
+    }
+
+    public Date updateDate() {
+        modifiedDate = new Date();
+        return modifiedDate;
+    }
+    public Date getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public boolean addUser(String user) {
+        if (activeUsers == null) {
+            activeUsers = new HashSet<String>();
+        }
+        return activeUsers.add(user);
+    }
+    public boolean removeUser(String user) {
+        return activeUsers.remove(user);
+    }
+    public Set<String> getActiveUsers() {
+        return activeUsers;
+    }
+
+    public void setSerialPoll(String poll) {
+        serialPoll = poll;
+    }
+    public String getSerialPoll() {
+        return serialPoll;
     }
 }
