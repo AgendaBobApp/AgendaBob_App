@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import casco.project1.Utilities.HttpPost;
+import casco.project1.dataBackend.Constants;
 import casco.project1.dataBackend.LocalDataStore;
 import casco.project1.dataBackend.Poll;
 
@@ -91,6 +93,18 @@ public class CloudService extends Service {
                 Log.d("CHANG", "New Poll: " + poll.getLongCode());
 
                 // Todo: send these to the cloud
+                System.err.println("Creating Poll: " + poll.getLongCode() + "");
+                try {
+                    HttpPost post = new HttpPost(Constants.BASE_URL, Constants.ENC);
+                    post.addFormField("op", "createPoll");
+                    post.addFormField("pollname", poll.getLongCode());
+                    post.addFormField("pollcreator", poll.getCreator().getName());
+                    post.addFormField("polldesc", poll.getDescription());
+                    post.finish();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                System.err.println("Created Poll "+poll.getLongCode()+ " on Server");
 
                 Context c = getApplicationContext();
                 String baseFileName = poll.getLongCode();
