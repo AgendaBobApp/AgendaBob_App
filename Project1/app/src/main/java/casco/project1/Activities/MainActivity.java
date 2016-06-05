@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     TextView test;
     User currentUser;
     int RC_SIGN_IN = 888;
+    boolean firstConnection = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,14 +128,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         bindService(intent, this, Context.BIND_AUTO_CREATE);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // get a reference to the service, for receiving messages
-        Context app = getApplicationContext();
-        Intent intent = new Intent(app, CloudService.class);
-        bindService(intent, this, Context.BIND_AUTO_CREATE);
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        // get a reference to the service, for receiving messages
+//        Context app = getApplicationContext();
+//        Intent intent = new Intent(app, CloudService.class);
+//        bindService(intent, this, Context.BIND_AUTO_CREATE);
+//    }
 
     @Override
     protected void onPause() {
@@ -157,6 +158,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // called when bindService succeeds
         service = ((CloudService.CloudServiceBinder) binder).getService();
         service.setListener(this);
+
+        //if (firstConnection) {
+        //    firstConnection = false;
+        //    service.updatePolls();
+        //}
     }
 
     @Override

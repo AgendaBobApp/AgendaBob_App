@@ -30,6 +30,17 @@ public class LocalDataStore {
         }
     }
 
+    public boolean renamePoll(Context c, String oldFile, String newFile) {
+        File o = c.getFileStreamPath(oldFile);
+        File n = c.getFileStreamPath(newFile);
+        if (o.exists()){
+            o.renameTo(n);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public Poll loadPoll(Context c, String fileName) {
         Poll newPoll = null;
         FileInputStream fis;
@@ -87,6 +98,25 @@ public class LocalDataStore {
             for (String file : files) {
                 if (file.endsWith(".remove")) {
                         polls.add(file.replace(".remove",""));
+                }
+            }
+        }
+
+        return polls;
+    }
+
+    public List<Poll> newPolls(Context c) {
+        List<Poll> polls = new ArrayList<Poll>();
+        String[] files = c.fileList();
+        Poll newPoll = null;
+
+        if (files.length > 0) {
+            for (String file : files) {
+                if (file.endsWith(".new")) {
+                    newPoll = loadPoll(c, file);
+                    if (newPoll != null) {
+                        polls.add(newPoll);
+                    }
                 }
             }
         }
