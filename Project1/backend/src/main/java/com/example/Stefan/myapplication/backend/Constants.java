@@ -18,6 +18,8 @@ public class Constants {
 
     // operations poll and pollGroup
     public static final String CreatePollKey = "createPoll";
+    public static final String GetPollByKey = "getPollByKey";
+    public static final String GetPollByUserKey = "getPollByUser";
     public static final String PurgePollsKey = "purgePolls";
 
     // operations user and userGroup

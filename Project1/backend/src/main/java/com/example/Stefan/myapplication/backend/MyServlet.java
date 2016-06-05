@@ -10,9 +10,12 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -40,13 +43,14 @@ public class MyServlet extends HttpServlet {
         PersistenceManager pm = PMF.getPMF().getPersistenceManager();
         try {
             switch (op) {
-                case Constants.CreateUserKey:
-                    handleCreateUser(req, out, pm);
+                case Constants.GetPollByKey:
+                    handleGetPoll(req, out, pm);
                     break;
                 case Constants.CreatePollKey:
                     handleCreatePoll(req, out, pm);
                     break;
-                case Constants.PurgeUsersKey:
+                case Constants.GetPollByUserKey:
+                    handleGetPolls(req, out, pm);
                     break;
                 case Constants.PurgePollsKey:
                     break;
@@ -60,30 +64,6 @@ public class MyServlet extends HttpServlet {
             } catch (Exception ignoreThis) {
             }
             out.write("{\"error\":" + new Gson().toJson(ex.getMessage()) + "}");
-        } finally {
-            pm.close();
-        }
-    }
-
-    private void handleCreateUser(HttpServletRequest req, PrintWriter out, PersistenceManager pm) {
-        try {
-            String name = req.getParameter(Constants.UserNameKey);
-            if (name == null || name.length() == 0){
-                throw new IllegalArgumentException("Invalid user Name \""+ name+"\"");
-            }
-            if (name == null)
-                name = "UNNAMED";
-            User user = new User();
-
-            // we could have multiple groups, each group locked separately,
-            // but let's just have one for this demo; create if not exists
-            UserGroup group = UserGroup.create(Constants.AllUsersGroup, pm);
-            user.setEntityGroup(group.getKey());
-            user.setName(name);
-            pm.makePersistent(user);
-            out.write(formatAsJson(user));
-        } catch (IllegalArgumentException iae) {
-            out.write(formatAsJson(iae));
         } finally {
             pm.close();
         }
@@ -112,7 +92,7 @@ public class MyServlet extends HttpServlet {
             newPoll.setSerialPoll(poll);
 
             pm.makePersistent(newPoll);
-            out.write(formatAsJson(newPoll));
+            out.write(newPoll.getID().toString());//formatAsJson()
             //out.write(newPoll.getID());
         } catch (IllegalArgumentException iae) {
             out.write(formatAsJson(iae));
@@ -124,11 +104,17 @@ public class MyServlet extends HttpServlet {
     private void handleGetPolls(HttpServletRequest req, PrintWriter out, PersistenceManager pm) {
         try {
             String user = req.getParameter(Constants.UserNameKey);
+            System.out.println(user);
             if (user == null || user.length() == 0){
                 throw new IllegalArgumentException("Invalid user \""+ user+"\"");
             }
 
-            Query q = pm.newQuery("SELECT FROM Poll WHERE activeUsers == activeUsersParm parameters String activeUsersParm");
+//            Query q = pm.newQuery("select from Poll where activeUsers == activeUsersParm parameters String activeUsersParm");
+            Query q = pm.newQuery(Poll.class);
+            q.setFilter("activeUsersParm in activeUsers");
+            q.setOrdering("height desc");
+            q.declareParameters("String activeUsersParm");
+
             List<Poll> results = (List<Poll>) q.execute(user);
             results.size();
 
@@ -146,10 +132,17 @@ public class MyServlet extends HttpServlet {
             if (pollID == null || pollID.length() == 0){
                 throw new IllegalArgumentException("Invalid key \""+ pollID+"\"");
             }
+//            Key k = KeyFactory.createKey(Poll.class.getSimpleName(), pollID);
+            System.out.println(pollID);
+            Key key = KeyFactory.createKey(Poll.class.getSimpleName(), new Long(pollID));
+            Query query = pm.newQuery("select from Poll where lastName in pollID parameters String pollID");
 
-            Poll poll = pm.getObjectById(Poll.class, pollID);
-            out.write(formatAsJson(poll));
+            List<Poll> polls = (ArrayList<Poll>) query.execute(key);
+            pm.currentTransaction().commit();
+            out.write(formatAsJson(polls.get(0)));
+            System.out.println(formatAsJson(polls.get(0)));
         } catch (IllegalArgumentException iae) {
+            System.err.println("Illegal Argument Exception");
             out.write(formatAsJson(iae));
         } finally {
             pm.close();
@@ -188,22 +181,37 @@ public class MyServlet extends HttpServlet {
         String rv = gson.toJson(obj);
         return rv;
     }
-    public static String formatAsJson(List<Poll> results) {
-        HashMap<String, HashMap<String, String>> obj = new HashMap<String, HashMap<String, String>>();
-        for (Poll poll : results) {
-            HashMap<String, String> innerObj = new HashMap<String, String>();
-            innerObj.put(Constants.PollID, poll.getID().toString());
-            innerObj.put(Constants.PollGroup, poll.getEntityGroup().toString());
-            innerObj.put(Constants.PollModDate, poll.getModifiedDate().toString());
-            innerObj.put(Constants.ActiveUsers, poll.getActiveUsers().toString());
-            innerObj.put(Constants.Poll, poll.getSerialPoll());
-            obj.put(poll.getID().toString(), innerObj);
+    public static String formatAsJson(List<Poll> polls){
+        List<String> serializedpolls = new ArrayList<String>();
+        List<HashMap<String, String>> serializedHashedPolls = new ArrayList<HashMap<String, String>>();
+        for(Poll poll : polls){
+            String jsonPoll = formatAsJson(poll);
+            System.out.println(jsonPoll);
+            serializedpolls.add(jsonPoll);
         }
-
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.create();
-
-        String rv = gson.toJson(obj);
+        Type listOfStrings = new TypeToken<ArrayList<String>>(){}.getType();
+        Gson gson = new Gson();
+        String rv = gson.toJson(serializedpolls, listOfStrings);
+        System.out.println(rv);
         return rv;
     }
+//    public static String formatAsJson(List<Poll> results) {
+//        HashMap<String, HashMap<String, String>> obj = new HashMap<String, HashMap<String, String>>();
+//        for (Poll poll : results) {
+//
+//            HashMap<String, String> innerObj = new HashMap<String, String>();
+//            innerObj.put(Constants.PollID, poll.getID().toString());
+//            innerObj.put(Constants.PollGroup, poll.getEntityGroup().toString());
+//            innerObj.put(Constants.PollModDate, poll.getModifiedDate().toString());
+//            innerObj.put(Constants.ActiveUsers, poll.getActiveUsers().toString());
+//            innerObj.put(Constants.Poll, poll.getSerialPoll());
+//            obj.put(poll.getID().toString(), innerObj);
+//        }
+//
+//        GsonBuilder builder = new GsonBuilder();
+//        Gson gson = builder.create();
+//
+//        String rv = gson.toJson(obj);
+//        return rv;
+//    }
 }
