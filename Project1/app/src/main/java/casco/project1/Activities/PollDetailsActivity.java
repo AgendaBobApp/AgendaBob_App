@@ -1,6 +1,10 @@
 package casco.project1.Activities;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,12 +17,13 @@ import android.widget.Toast;
 
 import casco.project1.Adapters.ResponseAdapter;
 import casco.project1.R;
+import casco.project1.Service.CloudService;
 import casco.project1.dataBackend.Constants;
 import casco.project1.dataBackend.LocalDataStore;
 import casco.project1.dataBackend.Poll;
 import casco.project1.dataBackend.User;
 
-public class PollDetailsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
+public class PollDetailsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, ServiceConnection {
     TextView tvPollName;
     TextView tvPollCreator;
     TextView tvPollResponses;
@@ -73,7 +78,45 @@ public class PollDetailsActivity extends AppCompatActivity implements AdapterVie
         lvResponses = (ListView) findViewById(R.id.lv_responses);
         lvResponses.setAdapter(new ResponseAdapter(this, poll.getResponses()));
         lvResponses.setOnItemClickListener(this);
+
+        Context app = getApplicationContext();
+        Intent serviceIntent = new Intent(app, CloudService.class);
+        app.startService(serviceIntent);
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // get a reference to the service, for receiving messages
+        Context app = getApplicationContext();
+        Intent intent = new Intent(app, CloudService.class);
+        bindService(intent, this, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // get a reference to the service, for receiving messages
+        Context app = getApplicationContext();
+        Intent intent = new Intent(app, CloudService.class);
+        bindService(intent, this, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (service != null) {
+            unbindService(this);
+        }
+    }
+
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        if (service != null) {
+//            unbindService(this);
+//        }
+//    }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -94,9 +137,25 @@ public class PollDetailsActivity extends AppCompatActivity implements AdapterVie
         LocalDataStore populator = new LocalDataStore();
         populator.removePoll(getApplicationContext(), poll);
 
+        service.removePolls();
+
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Constants.ClearBackstackFlags);
         startActivity(intent);
         finish();
+    }
+
+    private CloudService service;
+
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder binder) {
+        service = ((CloudService.CloudServiceBinder) binder).getService();
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+        if (service != null)
+            service.setListener(null);
+        service = null;
     }
 }

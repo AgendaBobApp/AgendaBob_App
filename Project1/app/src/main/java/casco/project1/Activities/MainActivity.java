@@ -1,9 +1,11 @@
 package casco.project1.Activities;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -34,6 +36,7 @@ import java.util.List;
 import casco.project1.DisplayPreferences;
 import casco.project1.Adapters.PollAdapter;
 import casco.project1.R;
+import casco.project1.Service.CloudService;
 import casco.project1.dataBackend.Constants;
 import casco.project1.dataBackend.LocalDataStore;
 import casco.project1.dataBackend.Poll;
@@ -42,8 +45,9 @@ import casco.project1.dataBackend.Serializier;
 import casco.project1.dataBackend.TestPopulator;
 import casco.project1.dataBackend.TimeSet;
 import casco.project1.dataBackend.User;
+import android.content.ServiceConnection;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, ServiceConnection, CloudService.Callback {
     CoordinatorLayout coordinatorLayout;
     ListView lvPolls;
     List<Poll> polls;
@@ -99,6 +103,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
 
+        Context app = getApplicationContext();
+        Intent intent = new Intent(app, CloudService.class);
+        app.startService(intent);
+
         /*try {
             poll_serialization();
 
@@ -107,6 +115,58 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }*/
 
     }
+
+    private CloudService service;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // get a reference to the service, for receiving messages
+        Context app = getApplicationContext();
+        Intent intent = new Intent(app, CloudService.class);
+        bindService(intent, this, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // get a reference to the service, for receiving messages
+        Context app = getApplicationContext();
+        Intent intent = new Intent(app, CloudService.class);
+        bindService(intent, this, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (service != null) {
+            unbindService(this);
+        }
+    }
+
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        if (service != null) {
+//            unbindService(this);
+//        }
+//    }
+
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder binder) {
+        // called when bindService succeeds
+        service = ((CloudService.CloudServiceBinder) binder).getService();
+        service.setListener(this);
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+        // called when unbindService succeeds
+        if (service != null)
+            service.setListener(null);
+        service = null;
+    }
+
     public void loadUser(Bundle bundle){
         currentUser = Constants.loadUser(bundle);
         //test = (TextView) findViewById(R.id.tvTest);

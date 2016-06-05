@@ -66,9 +66,31 @@ public class LocalDataStore {
     public void removePoll(Context c, Poll p) {
         String baseFileName = p.getLongCode();
 
-        File oldFile = c.getFileStreamPath(baseFileName + ".poll");
+        File oldFile1 = c.getFileStreamPath(baseFileName + ".poll");
+        File oldFile2 = c.getFileStreamPath(baseFileName + ".new");
         File newFile = c.getFileStreamPath(baseFileName + ".remove");
-        oldFile.renameTo(newFile);
+
+        if(oldFile1.exists()) {
+            oldFile1.renameTo(newFile);
+        } else if(oldFile2.exists()) {
+            oldFile2.renameTo(newFile);
+        }
+
         Log.d("CHANG", "Removed poll with name: " + baseFileName);
+    }
+
+    public List<String> removedPolls(Context c) {
+        List<String> polls = new ArrayList<String>();
+        String[] files = c.fileList();
+
+        if (files.length > 0) {
+            for (String file : files) {
+                if (file.endsWith(".remove")) {
+                        polls.add(file.replace(".remove",""));
+                }
+            }
+        }
+
+        return polls;
     }
 }
