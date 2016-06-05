@@ -119,6 +119,9 @@ public class PollCreation3Activity
         ibCreatePrev = (ImageButton) findViewById(R.id.btnCreatePrev);
         ibCreatePrev.setVisibility(View.INVISIBLE);
         ibCreateNext = (ImageButton) findViewById(R.id.btnCreateNext);
+        if (pollDays.size() < 2) {
+            ibCreateNext.setVisibility(View.INVISIBLE);
+        }
         //ibCreateNext.setText(pollDays.get(1));
         ibCreatePrev.setOnClickListener(this);
         ibCreateNext.setOnClickListener(this);
