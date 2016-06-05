@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +49,12 @@ public class MyServlet extends HttpServlet {
                     break;
                 case Constants.CreatePollKey:
                     handleCreatePoll(req, out, pm);
+                    break;
+                case Constants.GetAllPollsKey:
+                    handleGetAllPoll(req, out, pm);
+                    break;
+                case Constants.GetPollByUserKey:
+                    handleGetPolls(req, out, pm);
                     break;
                 case Constants.GetPollByUserKey:
                     handleGetPolls(req, out, pm);
@@ -104,48 +111,88 @@ public class MyServlet extends HttpServlet {
     private void handleGetPolls(HttpServletRequest req, PrintWriter out, PersistenceManager pm) {
         try {
             String user = req.getParameter(Constants.UserNameKey);
-            System.out.println(user);
+            System.out.println("USER: "+user);
             if (user == null || user.length() == 0){
                 throw new IllegalArgumentException("Invalid user \""+ user+"\"");
             }
-
-//            Query q = pm.newQuery("select from Poll where activeUsers == activeUsersParm parameters String activeUsersParm");
-            Query q = pm.newQuery(Poll.class);
-            q.setFilter("activeUsersParm in activeUsers");
-            q.setOrdering("height desc");
-            q.declareParameters("String activeUsersParm");
-
+            Query q = pm.newQuery(Poll.class, "activeUsers.contains(:user)");
             List<Poll> results = (List<Poll>) q.execute(user);
             results.size();
-
-            out.write(formatAsJson(results));
+            if (results != null)
+                out.write(formatAsJson(results));
+            else{
+                results = new ArrayList<Poll>();
+                System.out.println("RESULTS WAS NULL");
+                out.write(formatAsJson(results));
+            }
         } catch (IllegalArgumentException iae) {
             out.write(formatAsJson(iae));
         } finally {
             pm.close();
         }
     }
+    private void handleGetAllPoll(HttpServletRequest req, PrintWriter out, PersistenceManager pm) {
+//        String modDate = req.getParameter(Constants.GetAllPollsKey);
+//        System.out.println(modDate);
+//        if (modDate == null || modDate.length() == 0){
+//            new IllegalArgumentException("Invalid modDate \""+ modDate+"\"");
+//        }
+        Query q = pm.newQuery(Poll.class);
+        q.setOrdering("id");
 
-    private void handleGetPoll(HttpServletRequest req, PrintWriter out, PersistenceManager pm) {
         try {
-            String pollID = req.getParameter(Constants.PollID);
-            if (pollID == null || pollID.length() == 0){
-                throw new IllegalArgumentException("Invalid key \""+ pollID+"\"");
+            List<Poll> results = (List<Poll>) q.execute();
+            System.out.println(results.toString());
+            results.size();
+            if (!results.isEmpty()) {;
+                out.write(formatAsJson(results));
+                System.out.println(formatAsJson(results));
+            } else {
+                System.err.println("RESULTS WAS NULL");
+                out.write("NULL");
             }
-//            Key k = KeyFactory.createKey(Poll.class.getSimpleName(), pollID);
-            System.out.println(pollID);
-            Key key = KeyFactory.createKey(Poll.class.getSimpleName(), new Long(pollID));
-            Query query = pm.newQuery("select from Poll where lastName in pollID parameters String pollID");
-
-            List<Poll> polls = (ArrayList<Poll>) query.execute(key);
-            pm.currentTransaction().commit();
-            out.write(formatAsJson(polls.get(0)));
-            System.out.println(formatAsJson(polls.get(0)));
         } catch (IllegalArgumentException iae) {
-            System.err.println("Illegal Argument Exception");
             out.write(formatAsJson(iae));
         } finally {
-            pm.close();
+            q.closeAll();
+        }
+    }
+    private void handleGetPoll(HttpServletRequest req, PrintWriter out, PersistenceManager pm) {
+        String pollID = req.getParameter(Constants.PollID);
+        System.out.println(pollID);
+        if (pollID == null || pollID.length() == 0){
+            throw new IllegalArgumentException("Invalid Poll ID \""+ pollID+"\"");
+        }
+        Query q = pm.newQuery(Poll.class);
+        q.setFilter("id == pollID");
+        q.declareParameters("Long pollID");
+//        Key k = KeyFactory.createKey(Poll.class.getSimpleName(), new Long(pollID));
+//        Poll p = pm.getObjectById(Poll.class, k);
+//        if (p != null){
+//            out.write(formatAsJson(p));
+//            System.out.println(formatAsJson(p));
+//        }
+//        else {
+//            System.err.println("RESULTS WAS NULL");
+//            out.write("NULL");
+//        }
+
+        try {
+            List<Poll> results = (List<Poll>) q.execute(new Long(pollID));
+            System.out.println(results.toString());
+            results.size();
+            if (!results.isEmpty()) {
+                Poll p = results.get(0);
+                out.write(formatAsJson(p));
+                System.out.println(formatAsJson(p));
+            } else {
+                System.err.println("RESULTS WAS NULL");
+                out.write("NULL");
+            }
+        } catch (IllegalArgumentException iae) {
+            out.write(formatAsJson(iae));
+        } finally {
+            q.closeAll();
         }
     }
 
@@ -183,11 +230,10 @@ public class MyServlet extends HttpServlet {
     }
     public static String formatAsJson(List<Poll> polls){
         List<String> serializedpolls = new ArrayList<String>();
-        List<HashMap<String, String>> serializedHashedPolls = new ArrayList<HashMap<String, String>>();
         for(Poll poll : polls){
-            String jsonPoll = formatAsJson(poll);
-            System.out.println(jsonPoll);
-            serializedpolls.add(jsonPoll);
+//            String jsonPoll = formatAsJson();
+            System.out.println(poll.getSerialPoll());
+            serializedpolls.add(poll.getSerialPoll());
         }
         Type listOfStrings = new TypeToken<ArrayList<String>>(){}.getType();
         Gson gson = new Gson();

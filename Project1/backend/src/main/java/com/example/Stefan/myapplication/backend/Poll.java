@@ -29,7 +29,7 @@ public class Poll implements Serializable{
     @Persistent
     private Date modifiedDate;
 
-    @Persistent
+    @Persistent(mappedBy = "employee", dependentElement = "true")
     private Set<String> activeUsers;
 
     @Persistent
