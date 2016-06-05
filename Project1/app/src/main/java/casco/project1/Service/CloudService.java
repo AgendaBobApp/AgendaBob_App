@@ -7,6 +7,8 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import java.io.File;
 import java.util.List;
 import java.util.Timer;
@@ -93,22 +95,26 @@ public class CloudService extends Service {
                 Log.d("CHANG", "New Poll: " + poll.getLongCode());
 
                 // Todo: send these to the cloud
+                String key = "";
                 System.err.println("Creating Poll: " + poll.getLongCode() + "");
                 try {
                     HttpPost post = new HttpPost(Constants.BASE_URL, Constants.ENC);
                     post.addFormField("op", "createPoll");
-                    post.addFormField("pollname", poll.getLongCode());
-                    post.addFormField("pollcreator", poll.getCreator().getName());
-                    post.addFormField("polldesc", poll.getDescription());
-                    post.finish();
+                    post.addFormField("username", poll.getCreator().getName());
+                    Gson gson = new Gson();
+                    String json = gson.toJson(poll);
+                    post.addFormField("poll", json);
+                    key = post.finish();
+                    poll.setLongCode(key);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
                 System.err.println("Created Poll "+poll.getLongCode()+ " on Server");
 
                 Context c = getApplicationContext();
-                String baseFileName = poll.getLongCode();
-                populator.renamePoll(c, baseFileName + ".new", baseFileName + ".poll");
+                String baseFileName = poll.getTitle();
+                populator.renamePoll(c, baseFileName + ".new", key + ".poll");
+                populator.savePoll(c, poll);
             }
         }
 

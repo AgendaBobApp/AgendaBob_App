@@ -325,6 +325,7 @@ public class PollCreation3Activity
                     }
                 }
 
+                newPoll.setLongCode(newPoll.getTitle());
                 LocalDataStore populator = new LocalDataStore();
                 populator.savePoll(context, newPoll);
 

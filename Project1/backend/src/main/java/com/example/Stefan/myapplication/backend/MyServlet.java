@@ -56,9 +56,6 @@ public class MyServlet extends HttpServlet {
                 case Constants.GetPollByUserKey:
                     handleGetPolls(req, out, pm);
                     break;
-                case Constants.GetPollByUserKey:
-                    handleGetPolls(req, out, pm);
-                    break;
                 case Constants.PurgePollsKey:
                     break;
                 default:

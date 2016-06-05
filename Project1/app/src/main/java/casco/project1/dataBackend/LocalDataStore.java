@@ -15,9 +15,8 @@ import java.util.List;
 public class LocalDataStore {
     public boolean savePoll(Context c, Poll poll) {
         // Using filename for now; should use unique ID later
-        String fileName = poll.getTitle() + ".new";
+        String fileName = poll.getLongCode() + ".new";
         //String fileName = poll.getShortCode() + ".poll";
-        poll.setLongCode(poll.getTitle());
 
         FileOutputStream fos;
         try {
