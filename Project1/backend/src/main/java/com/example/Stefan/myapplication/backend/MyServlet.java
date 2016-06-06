@@ -63,9 +63,9 @@ public class MyServlet extends HttpServlet {
                 case Constants.UpdatePollByKey:
                     UpdatePoll(req, out, pm);
                     break;
-                case Constants.PurgePollsKey:
-                    PurgeEmptyPolls(req, out, pm);
-                    break;
+//                case Constants.PurgePollsKey:
+//                    PurgeEmptyPolls(req, out, pm);
+//                    break;
                 case Constants.GetAllPollsKey:
                     DEBUGHandleGetAllPoll(req, out, pm);
                     break;
@@ -297,43 +297,7 @@ public class MyServlet extends HttpServlet {
             pm.close();
         }
     }
-    private void PurgeEmptyPolls(HttpServletRequest req, PrintWriter out, PersistenceManager pm) {
-        System.out.println("PURGING EMPTY POLLS !!!!!!!");
-        Transaction trans = pm.currentTransaction();
-//        Query q = pm.newQuery(Poll.class, "activeUsers.size() < :amount");
-        Query q = pm.newQuery(Poll.class);
-        q.setOrdering("id");
-        try {
-            trans.begin();
-            System.out.println("HERE 1 !!!!!!!");
-            List<Poll> results = (List<Poll>) q.execute();
-//            List<Poll> results = (List<Poll>) q.execute(1);
-            System.out.println("HERE 2 !!!!!!!");
-            results.size();
-            System.out.println("Polls: "+results.toString());
-            if (!results.isEmpty()) {
-                for(Poll p : results){
-                    if (p.getActiveUsers().size() < 1) {
-                        System.out.println("No Active Uses for Poll: "+p.getID().toString());
-                        System.out.println("DELETING: " +p.getID().toString());
-                        pm.deletePersistent(p);
-                    }
-                }
-            } else {
-                System.err.println("RESULTS WAS NULL");
-            }
-            trans.commit();
-        } catch (IllegalArgumentException iae) {
-//            out.write(formatAsJson(iae));
-            System.err.println("IllegalArgumentException");
-            if (trans.isActive()){trans.rollback();}
-        } catch (Exception e) {
-            if (trans.isActive()){trans.rollback();}
-            e.printStackTrace();
-        }finally {
-            q.closeAll();
-        }
-    }
+
     private void DEBUGHandleGetAllPoll(HttpServletRequest req, PrintWriter out, PersistenceManager pm) {
         Query q = pm.newQuery(Poll.class);
         q.setOrdering("id");
@@ -401,23 +365,4 @@ public class MyServlet extends HttpServlet {
         System.out.println(rv);
         return rv;
     }
-//    public static String formatAsJson(List<Poll> results) {
-//        HashMap<String, HashMap<String, String>> obj = new HashMap<String, HashMap<String, String>>();
-//        for (Poll poll : results) {
-//
-//            HashMap<String, String> innerObj = new HashMap<String, String>();
-//            innerObj.put(Constants.PollID, poll.getID().toString());
-//            innerObj.put(Constants.PollGroup, poll.getEntityGroup().toString());
-//            innerObj.put(Constants.PollModDate, poll.getModifiedDate().toString());
-//            innerObj.put(Constants.ActiveUsers, poll.getActiveUsers().toString());
-//            innerObj.put(Constants.Poll, poll.getSerialPoll());
-//            obj.put(poll.getID().toString(), innerObj);
-//        }
-//
-//        GsonBuilder builder = new GsonBuilder();
-//        Gson gson = builder.create();
-//
-//        String rv = gson.toJson(obj);
-//        return rv;
-//    }
 }
