@@ -60,6 +60,10 @@ public class Poll implements Serializable{
         }
         return activeUsers.add(user);
     }
+    public boolean updateSerializedPoll(String sp){
+        serialPoll = sp;
+        return true;
+    }
     public boolean removeUser(String user) {
         return activeUsers.remove(user);
     }

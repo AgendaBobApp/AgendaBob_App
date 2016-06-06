@@ -20,12 +20,14 @@ public class Constants {
     public static final String CreatePollKey = "createPoll";
     public static final String GetAllPollsKey = "getAllPollsKey";
     public static final String GetPollByKey = "getPollByKey";
+    public static final String UpdatePollByKey = "updatePollKey";
     public static final String GetPollByDate = "getPollByDateKey";
     public static final String GetPollByUserKey = "getPollByUser";
     public static final String PurgePollsKey = "purgePolls";
 
     // operations user and userGroup
     public static final String CreateUserKey = "createUser";
+    public static final String addUserKey = "addUser";
     public static final String removeUserKey = "removeUser";
     public static final String PurgeUsersKey = "purgeUsers";
 }
