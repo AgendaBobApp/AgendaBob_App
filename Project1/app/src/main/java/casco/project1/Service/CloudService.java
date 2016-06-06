@@ -44,6 +44,18 @@ public class CloudService extends Service {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
+                removePolls();
+            }
+        }, 1, 10000);
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                uploadPolls();
+            }
+        }, 1, 10000);
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
                 updatePolls();
             }
         }, 1, 10000);
@@ -87,14 +99,14 @@ public class CloudService extends Service {
                     post.addFormField("key", poll);
                     post.addFormField("username", userID);
                     json = post.finish();
+
+                    File dir = getFilesDir();
+                    File file = new File(dir, poll + ".remove");
+                    file.delete();
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     json = null;
                 }
-
-                File dir = getFilesDir();
-                File file = new File(dir, poll + ".remove");
-                file.delete();
             }
         }
 
@@ -111,51 +123,56 @@ public class CloudService extends Service {
     private class PollUploader extends Thread {
 
         public void run() {
+            Log.d("CHANG", "Uploader thread started.");
             List<Poll> polls = populator.newPolls(getApplicationContext());
             for (Poll poll:polls) {
-                Log.d("CHANG", "New Poll: " + poll.getLongCode());
+                Log.d("CHANG", "New Poll to upload: " + poll.getLongCode());
 
                 // Todo: send these to the cloud
                 String key = "";
                 System.err.println("Creating Poll: " + poll.getLongCode() + "");
                 try {
+                    Log.d("CHANG", "Before first HTTP request.");
                     HttpPost post = new HttpPost(Constants.BASE_URL, Constants.ENC);
                     post.addFormField("op", "createPoll");
                     post.addFormField("username", poll.getCreator().getName());
                     Gson gson = new Gson();
                     String json = gson.toJson(poll);
-                    Log.d("CHANG", "Pre-sent JSON: " + json);
                     post.addFormField("poll", json);
                     key = post.finish();
+                    Log.d("CHANG", "After first HTTP request.");
                     key = key.replaceAll("\\D+","");
                     poll.setLongCode(key);
+
+                    Context c = getApplicationContext();
+                    String baseFileName = poll.getTitle();
+                    File dir = getFilesDir();
+                    File file = new File(dir, baseFileName + ".new");
+                    file.delete();
+                    populator.savePoll(c, poll, true);
+
+                    System.err.println("Getting Poll by Key: " + key + "");
+                    try {
+                        Log.d("CHANG", "Before second HTTP request.");
+                        post = new HttpPost(Constants.BASE_URL, Constants.ENC);
+                        post.addFormField("op", "updatePollKey");
+                        post.addFormField("key", key);
+                        post.addFormField("username", userID);
+                        gson = new Gson();
+                        String jsonOut = gson.toJson( poll );
+                        post.addFormField("poll", jsonOut);
+                        json = post.finish();
+                        Log.d("CHANG", "After second HTTP request.");
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        json = null;
+                    }
+                    Log.d("CHANG", "First poll uploaded.");
+
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
                 System.err.println("Created Poll "+poll.getLongCode()+ " on Server");
-
-                Context c = getApplicationContext();
-                String baseFileName = poll.getTitle();
-                File dir = getFilesDir();
-                File file = new File(dir, baseFileName + ".new");
-                file.delete();
-                populator.savePoll(c, poll, true);
-
-                System.err.println("Getting Poll by Key: " + key + "");
-                String json;
-                try {
-                    HttpPost post = new HttpPost(Constants.BASE_URL, Constants.ENC);
-                    post.addFormField("op", "updatePollKey");
-                    post.addFormField("key", key);
-                    post.addFormField("username", userID);
-                    Gson gson = new Gson();
-                    String jsonOut = gson.toJson( poll );
-                    post.addFormField("poll", jsonOut);
-                    json = post.finish();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    json = null;
-                }
             }
         }
 
@@ -178,7 +195,6 @@ public class CloudService extends Service {
                  post.addFormField("op", "getPollByUser");
                  post.addFormField("username", userID);
                  json = post.finish();
-                 Log.d("CHANG", "Full JSON: " + json);
 //			System.out.println(json);
              } catch (Exception ex) {
                  ex.printStackTrace();
@@ -191,7 +207,6 @@ public class CloudService extends Service {
                  List<String> SerializedPollList = new Gson().fromJson(json, listType);
                  List<Poll> pollList = new ArrayList<Poll>();
                  for (String jsPoll : SerializedPollList){
-                     Log.d("CHANG", jsPoll);
                      Poll p = new Gson().fromJson(jsPoll, Poll.class);
                      pollList.add(p);
                  }
@@ -200,8 +215,6 @@ public class CloudService extends Service {
                      populator.savePoll(getApplicationContext(), poll, true);
                  }
              }
-
-             Log.d("CHANG", "I UPDATED STUFF!");
          }
 
         public void cleanup() {
