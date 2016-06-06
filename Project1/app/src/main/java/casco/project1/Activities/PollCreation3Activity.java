@@ -327,7 +327,7 @@ public class PollCreation3Activity
 
                 newPoll.setLongCode(newPoll.getTitle());
                 LocalDataStore populator = new LocalDataStore();
-                populator.savePoll(context, newPoll);
+                populator.savePoll(context, newPoll, false);
 
                 // Call service to upload new poll
                 service.uploadPolls();

@@ -13,9 +13,14 @@ import java.util.List;
  * Created by crazy on 5/12/2016.
  */
 public class LocalDataStore {
-    public boolean savePoll(Context c, Poll poll) {
+    public boolean savePoll(Context c, Poll poll, boolean replace) {
         // Using filename for now; should use unique ID later
-        String fileName = poll.getLongCode() + ".new";
+        String fileName = "";
+        if (replace) {
+            fileName = poll.getLongCode() + ".poll";
+        } else {
+            fileName = poll.getLongCode() + ".new";
+        }
         //String fileName = poll.getShortCode() + ".poll";
 
         FileOutputStream fos;
@@ -76,6 +81,7 @@ public class LocalDataStore {
 
     public void removePoll(Context c, Poll p) {
         String baseFileName = p.getLongCode();
+        Log.d("CHANG", "Base file name: " + baseFileName);
 
         File oldFile1 = c.getFileStreamPath(baseFileName + ".poll");
         File oldFile2 = c.getFileStreamPath(baseFileName + ".new");

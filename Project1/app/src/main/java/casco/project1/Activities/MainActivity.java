@@ -158,11 +158,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // called when bindService succeeds
         service = ((CloudService.CloudServiceBinder) binder).getService();
         service.setListener(this);
-
-        //if (firstConnection) {
-        //    firstConnection = false;
-        //    service.updatePolls();
-        //}
     }
 
     @Override
@@ -258,6 +253,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         coordinatorLayout, "Logged in as "+personName+".  Welcome!",
                         Snackbar.LENGTH_LONG);
                 snackbar.show();
+                if (service != null) {
+                    service.setUserID(currentUser.getName());
+                }
             }
 
             //mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));

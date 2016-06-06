@@ -10,6 +10,7 @@ import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -19,17 +20,17 @@ import java.util.TreeSet;
  *      Such as create a Response that is a composite of a set of responses
  */
 public class TimeSet implements Serializable{
-    protected Dictionary<String, Set<String>> times;
+    protected Map<String, Set<String>> times;
 
     public TimeSet() {
         this.times  = new Hashtable<String, Set<String>>();
     }
 
-    public void setWholeDictionary(Dictionary<String, Set<String>> d) {
+    public void setWholeDictionary(Map<String, Set<String>> d) {
         times = d;
     }
 
-    public Dictionary<String, Set<String>> getTimes() {
+    public Map<String, Set<String>> getTimes() {
         return times;
     }
 

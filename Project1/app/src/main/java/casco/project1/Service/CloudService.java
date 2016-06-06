@@ -8,8 +8,11 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -20,6 +23,8 @@ import casco.project1.dataBackend.LocalDataStore;
 import casco.project1.dataBackend.Poll;
 
 public class CloudService extends Service {
+    private String userID;
+
     public CloudService() {
     }
 
@@ -41,7 +46,7 @@ public class CloudService extends Service {
             public void run() {
                 updatePolls();
             }
-        }, 1, 900000);
+        }, 1, 10000);
 
         return START_STICKY;
     }
@@ -62,6 +67,10 @@ public class CloudService extends Service {
         this.callback = callback;
     }
 
+    public void setUserID(String id) {
+        userID = id;
+    }
+
     private class PollRemover extends Thread {
 
         public void run() {
@@ -70,6 +79,18 @@ public class CloudService extends Service {
                 Log.d("MELLO", "Poll: " + poll);
 
                 // Todo: Send these to the cloud.
+                System.err.println("Removing poll with Key: " + poll + "");
+                String json;
+                try {
+                    HttpPost post = new HttpPost(Constants.BASE_URL, Constants.ENC);
+                    post.addFormField("op", "removeUser");
+                    post.addFormField("key", poll);
+                    post.addFormField("username", userID);
+                    json = post.finish();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    json = null;
+                }
 
                 File dir = getFilesDir();
                 File file = new File(dir, poll + ".remove");
@@ -103,6 +124,7 @@ public class CloudService extends Service {
                     post.addFormField("username", poll.getCreator().getName());
                     Gson gson = new Gson();
                     String json = gson.toJson(poll);
+                    Log.d("CHANG", "Pre-sent JSON: " + json);
                     post.addFormField("poll", json);
                     key = post.finish();
                     key = key.replaceAll("\\D+","");
@@ -117,8 +139,23 @@ public class CloudService extends Service {
                 File dir = getFilesDir();
                 File file = new File(dir, baseFileName + ".new");
                 file.delete();
-                populator.savePoll(c, poll);
-                populator.renamePoll(c, key + ".new", key + ".poll");
+                populator.savePoll(c, poll, true);
+
+                System.err.println("Getting Poll by Key: " + key + "");
+                String json;
+                try {
+                    HttpPost post = new HttpPost(Constants.BASE_URL, Constants.ENC);
+                    post.addFormField("op", "updatePollKey");
+                    post.addFormField("key", key);
+                    post.addFormField("username", userID);
+                    Gson gson = new Gson();
+                    String jsonOut = gson.toJson( poll );
+                    post.addFormField("poll", jsonOut);
+                    json = post.finish();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    json = null;
+                }
             }
         }
 
@@ -135,9 +172,34 @@ public class CloudService extends Service {
     private class PollUpdater extends Thread {
          public void run() {
              // Todo: get updates from the cloud
+             String json;
+             try {
+                 HttpPost post = new HttpPost(Constants.BASE_URL, Constants.ENC);
+                 post.addFormField("op", "getPollByUser");
+                 post.addFormField("username", userID);
+                 json = post.finish();
+                 Log.d("CHANG", "Full JSON: " + json);
+//			System.out.println(json);
+             } catch (Exception ex) {
+                 ex.printStackTrace();
+                 json = null;
+             }
+             if (json != null){
+//			System.out.println(json);
+                 Type listType = new TypeToken<ArrayList<String>>() {
+                 }.getType();
+                 List<String> SerializedPollList = new Gson().fromJson(json, listType);
+                 List<Poll> pollList = new ArrayList<Poll>();
+                 for (String jsPoll : SerializedPollList){
+                     Log.d("CHANG", jsPoll);
+                     Poll p = new Gson().fromJson(jsPoll, Poll.class);
+                     pollList.add(p);
+                 }
 
-
-             // Todo: save downloaded polls to the data store
+                 for (Poll poll: pollList) {
+                     populator.savePoll(getApplicationContext(), poll, true);
+                 }
+             }
 
              Log.d("CHANG", "I UPDATED STUFF!");
          }
@@ -148,7 +210,9 @@ public class CloudService extends Service {
     }
 
     public void updatePolls() {
-        PollUpdater updater = new PollUpdater();
-        updater.start();
+        if (userID != "") {
+            PollUpdater updater = new PollUpdater();
+            updater.start();
+        }
     }
 }
