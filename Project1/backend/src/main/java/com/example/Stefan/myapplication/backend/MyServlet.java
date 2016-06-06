@@ -23,6 +23,7 @@ import java.util.List;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
+import javax.jdo.Transaction;
 import javax.servlet.http.*;
 
 public class MyServlet extends HttpServlet {
@@ -50,13 +51,23 @@ public class MyServlet extends HttpServlet {
                 case Constants.CreatePollKey:
                     handleCreatePoll(req, out, pm);
                     break;
-                case Constants.GetAllPollsKey:
-                    handleGetAllPoll(req, out, pm);
-                    break;
                 case Constants.GetPollByUserKey:
                     handleGetPolls(req, out, pm);
                     break;
+                case Constants.addUserKey:
+                    handleAddUserFromPoll(req, out, pm);
+                    break;
+                case Constants.removeUserKey:
+                    handleRemoveUserFromPoll(req, out, pm);
+                    break;
+                case Constants.UpdatePollByKey:
+                    UpdatePoll(req, out, pm);
+                    break;
                 case Constants.PurgePollsKey:
+                    PurgeEmptyPolls(req, out, pm);
+                    break;
+                case Constants.GetAllPollsKey:
+                    DEBUGHandleGetAllPoll(req, out, pm);
                     break;
                 default:
                     throw new IllegalArgumentException("Invalid op parameter");
@@ -64,7 +75,7 @@ public class MyServlet extends HttpServlet {
         } catch (Exception ex) {
             ex.printStackTrace();
             try {
-                pm.currentTransaction().rollback();
+                if (pm.currentTransaction().isActive()){pm.currentTransaction().rollback();}
             } catch (Exception ignoreThis) {
             }
             out.write("{\"error\":" + new Gson().toJson(ex.getMessage()) + "}");
@@ -87,10 +98,12 @@ public class MyServlet extends HttpServlet {
 
             // we could have multiple groups, each group locked separately,
             // but let's just have one for this project; create if not exists
-            PollGroup group = PollGroup.create(Constants.AllPollsGroup, pm);
 
             Poll newPoll = new Poll();
+
+            PollGroup group = PollGroup.create(Constants.AllPollsGroup, pm);
             newPoll.setEntityGroup(group.getKey());
+
             newPoll.updateDate();
             newPoll.addUser(user);
             newPoll.setSerialPoll(poll);
@@ -104,7 +117,32 @@ public class MyServlet extends HttpServlet {
             pm.close();
         }
     }
+    private void handleGetPoll(HttpServletRequest req, PrintWriter out, PersistenceManager pm) {
+        String pollID = req.getParameter(Constants.PollID);
+        System.out.println(pollID);
 
+        if (pollID == null || pollID.length() == 0){
+            throw new IllegalArgumentException("Invalid Poll ID \""+ pollID+"\"");
+        }
+        Long id = new Long(pollID);
+        System.out.println(id.toString());
+        try {
+            Key entityGoup = PollGroup.create(Constants.AllPollsGroup, pm).getKey();
+            Key key = new KeyFactory.Builder(
+                    entityGoup).addChild(Poll.class.getSimpleName(), id).getKey();
+            Poll p = pm.getObjectById(Poll.class, key);
+            if (p != null) {;
+                out.write(p.getSerialPoll());
+                System.out.println(p.getSerialPoll());
+            } else {
+                System.err.println("RESULTS WAS NULL");
+                //out.write("NULL");
+            }
+        } catch (IllegalArgumentException iae) {
+            out.write(formatAsJson(iae));
+        } finally {
+        }
+    }
     private void handleGetPolls(HttpServletRequest req, PrintWriter out, PersistenceManager pm) {
         try {
             String user = req.getParameter(Constants.UserNameKey);
@@ -128,12 +166,175 @@ public class MyServlet extends HttpServlet {
             pm.close();
         }
     }
-    private void handleGetAllPoll(HttpServletRequest req, PrintWriter out, PersistenceManager pm) {
-//        String modDate = req.getParameter(Constants.GetAllPollsKey);
-//        System.out.println(modDate);
-//        if (modDate == null || modDate.length() == 0){
-//            new IllegalArgumentException("Invalid modDate \""+ modDate+"\"");
-//        }
+    private void UpdatePoll(HttpServletRequest req, PrintWriter out, PersistenceManager pm) {
+        Transaction trans = pm.currentTransaction();
+        try {
+            trans.begin();
+            String user = req.getParameter(Constants.UserNameKey);
+            System.out.println("USER: "+user);
+            if (user == null || user.length() == 0){
+                throw new IllegalArgumentException("Invalid user \""+ user+"\"");
+            }
+            String poll = req.getParameter(Constants.Poll);
+            System.out.println("USER: "+user);
+            if (poll == null || poll.length() == 0){
+                throw new IllegalArgumentException("Invalid poll \""+ poll+"\"");
+            }
+            String pollID = req.getParameter(Constants.PollID);
+            System.out.println(pollID);
+
+            if (pollID == null || pollID.length() == 0){
+                throw new IllegalArgumentException("Invalid Poll ID \""+ pollID+"\"");
+            }
+            Long id = new Long(pollID);
+            System.out.println(id.toString());
+
+            Key entityGoup = PollGroup.create(Constants.AllPollsGroup, pm).getKey();
+            Key key = new KeyFactory.Builder(
+                    entityGoup).addChild(Poll.class.getSimpleName(), id).getKey();
+            Poll p = pm.getObjectById(Poll.class, key);
+            if (p != null) {
+                p.updateDate();
+                p.updateSerializedPoll(poll);
+                pm.makePersistent(p);
+//                out.write(p.getSerialPoll());
+                System.out.println("UPDATE SUCCESS: " +user+ "" + p.getSerialPoll());
+            } else {
+                System.err.println("RESULTS WAS NULL");
+                //out.write("NULL");
+            }
+            trans.commit();
+        } catch (IllegalArgumentException iae) {
+            out.write(formatAsJson(iae));
+            if (trans.isActive()){trans.rollback();}
+        } catch (Exception e) {
+            if (trans.isActive()){trans.rollback();}
+        }finally {
+            pm.close();
+        }
+    }
+    private void handleAddUserFromPoll(HttpServletRequest req, PrintWriter out, PersistenceManager pm) {
+        Transaction trans = pm.currentTransaction();
+        try {
+            trans.begin();
+
+            String user = req.getParameter(Constants.UserNameKey);
+            System.out.println("USER: "+user);
+            if (user == null || user.length() == 0){
+                throw new IllegalArgumentException("Invalid user \""+ user+"\"");
+            }
+            String pollID = req.getParameter(Constants.PollID);
+            System.out.println(pollID);
+
+            if (pollID == null || pollID.length() == 0){
+                throw new IllegalArgumentException("Invalid Poll ID \""+ pollID+"\"");
+            }
+            Long id = new Long(pollID);
+            System.out.println(id.toString());
+
+            Key entityGoup = PollGroup.create(Constants.AllPollsGroup, pm).getKey();
+            Key key = new KeyFactory.Builder(
+                    entityGoup).addChild(Poll.class.getSimpleName(), id).getKey();
+            Poll p = pm.getObjectById(Poll.class, key);
+            if (p != null) {
+                p.addUser(user);
+                pm.makePersistent(p);
+//                out.write(p.getSerialPoll());
+                System.out.println("ADD SUCCESS: " +user+ "" + p.getID().toString());
+            } else {
+                System.err.println("RESULTS WAS NULL");
+                //out.write("NULL");
+            }
+            trans.commit();
+        } catch (IllegalArgumentException iae) {
+            out.write(formatAsJson(iae));
+            if (trans.isActive()){trans.rollback();}
+        } catch (Exception e) {
+            if (trans.isActive()){trans.rollback();}
+        }finally {
+            pm.close();
+        }
+    }
+    private void handleRemoveUserFromPoll(HttpServletRequest req, PrintWriter out, PersistenceManager pm) {
+        Transaction trans = pm.currentTransaction();
+        try {
+            trans.begin();
+
+            String user = req.getParameter(Constants.UserNameKey);
+            System.out.println("USER: "+user);
+            if (user == null || user.length() == 0){
+                throw new IllegalArgumentException("Invalid user \""+ user+"\"");
+            }
+            String pollID = req.getParameter(Constants.PollID);
+            System.out.println(pollID);
+
+            if (pollID == null || pollID.length() == 0){
+                throw new IllegalArgumentException("Invalid Poll ID \""+ pollID+"\"");
+            }
+            Long id = new Long(pollID);
+            System.out.println(id.toString());
+
+            Key entityGoup = PollGroup.create(Constants.AllPollsGroup, pm).getKey();
+            Key key = new KeyFactory.Builder(
+                    entityGoup).addChild(Poll.class.getSimpleName(), id).getKey();
+            Poll p = pm.getObjectById(Poll.class, key);
+            if (p != null) {
+                p.removeUser(user);
+                pm.makePersistent(p);
+//                out.write(p.getSerialPoll());
+                System.out.println("REMOVE SUCCESS: " +user+ "" + p.getID().toString());
+            } else {
+                System.err.println("RESULTS WAS NULL");
+                //out.write("NULL");
+            }
+            trans.commit();
+        } catch (IllegalArgumentException iae) {
+            out.write(formatAsJson(iae));
+            if (trans.isActive()){trans.rollback();}
+        } catch (Exception e) {
+            if (trans.isActive()){trans.rollback();}
+        }finally {
+            pm.close();
+        }
+    }
+    private void PurgeEmptyPolls(HttpServletRequest req, PrintWriter out, PersistenceManager pm) {
+        System.out.println("PURGING EMPTY POLLS !!!!!!!");
+        Transaction trans = pm.currentTransaction();
+//        Query q = pm.newQuery(Poll.class, "activeUsers.size() < :amount");
+        Query q = pm.newQuery(Poll.class);
+        q.setOrdering("id");
+        try {
+            trans.begin();
+            System.out.println("HERE 1 !!!!!!!");
+            List<Poll> results = (List<Poll>) q.execute();
+//            List<Poll> results = (List<Poll>) q.execute(1);
+            System.out.println("HERE 2 !!!!!!!");
+            results.size();
+            System.out.println("Polls: "+results.toString());
+            if (!results.isEmpty()) {
+                for(Poll p : results){
+                    if (p.getActiveUsers().size() < 1) {
+                        System.out.println("No Active Uses for Poll: "+p.getID().toString());
+                        System.out.println("DELETING: " +p.getID().toString());
+                        pm.deletePersistent(p);
+                    }
+                }
+            } else {
+                System.err.println("RESULTS WAS NULL");
+            }
+            trans.commit();
+        } catch (IllegalArgumentException iae) {
+//            out.write(formatAsJson(iae));
+            System.err.println("IllegalArgumentException");
+            if (trans.isActive()){trans.rollback();}
+        } catch (Exception e) {
+            if (trans.isActive()){trans.rollback();}
+            e.printStackTrace();
+        }finally {
+            q.closeAll();
+        }
+    }
+    private void DEBUGHandleGetAllPoll(HttpServletRequest req, PrintWriter out, PersistenceManager pm) {
         Query q = pm.newQuery(Poll.class);
         q.setOrdering("id");
 
@@ -148,51 +349,13 @@ public class MyServlet extends HttpServlet {
                 System.err.println("RESULTS WAS NULL");
                 out.write("NULL");
             }
+
         } catch (IllegalArgumentException iae) {
             out.write(formatAsJson(iae));
         } finally {
             q.closeAll();
         }
     }
-    private void handleGetPoll(HttpServletRequest req, PrintWriter out, PersistenceManager pm) {
-        String pollID = req.getParameter(Constants.PollID);
-        System.out.println(pollID);
-        if (pollID == null || pollID.length() == 0){
-            throw new IllegalArgumentException("Invalid Poll ID \""+ pollID+"\"");
-        }
-        Query q = pm.newQuery(Poll.class);
-        q.setFilter("id == pollID");
-        q.declareParameters("Long pollID");
-//        Key k = KeyFactory.createKey(Poll.class.getSimpleName(), new Long(pollID));
-//        Poll p = pm.getObjectById(Poll.class, k);
-//        if (p != null){
-//            out.write(formatAsJson(p));
-//            System.out.println(formatAsJson(p));
-//        }
-//        else {
-//            System.err.println("RESULTS WAS NULL");
-//            out.write("NULL");
-//        }
-
-        try {
-            List<Poll> results = (List<Poll>) q.execute(new Long(pollID));
-            System.out.println(results.toString());
-            results.size();
-            if (!results.isEmpty()) {
-                Poll p = results.get(0);
-                out.write(formatAsJson(p));
-                System.out.println(formatAsJson(p));
-            } else {
-                System.err.println("RESULTS WAS NULL");
-                out.write("NULL");
-            }
-        } catch (IllegalArgumentException iae) {
-            out.write(formatAsJson(iae));
-        } finally {
-            q.closeAll();
-        }
-    }
-
     public static String formatAsJson(Exception e) {
         HashMap<String, String> obj = new HashMap<String, String>();
         obj.put("errormsg", e.getMessage());
