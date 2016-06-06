@@ -15,9 +15,8 @@ import java.util.List;
 public class LocalDataStore {
     public boolean savePoll(Context c, Poll poll) {
         // Using filename for now; should use unique ID later
-        String fileName = poll.getTitle() + ".new";
+        String fileName = poll.getLongCode() + ".new";
         //String fileName = poll.getShortCode() + ".poll";
-        poll.setLongCode(poll.getTitle());
 
         FileOutputStream fos;
         try {
@@ -26,6 +25,17 @@ public class LocalDataStore {
             return true;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean renamePoll(Context c, String oldFile, String newFile) {
+        File o = c.getFileStreamPath(oldFile);
+        File n = c.getFileStreamPath(newFile);
+        if (o.exists()){
+            o.renameTo(n);
+            return true;
+        } else {
             return false;
         }
     }
@@ -87,6 +97,25 @@ public class LocalDataStore {
             for (String file : files) {
                 if (file.endsWith(".remove")) {
                         polls.add(file.replace(".remove",""));
+                }
+            }
+        }
+
+        return polls;
+    }
+
+    public List<Poll> newPolls(Context c) {
+        List<Poll> polls = new ArrayList<Poll>();
+        String[] files = c.fileList();
+        Poll newPoll = null;
+
+        if (files.length > 0) {
+            for (String file : files) {
+                if (file.endsWith(".new")) {
+                    newPoll = loadPoll(c, file);
+                    if (newPoll != null) {
+                        polls.add(newPoll);
+                    }
                 }
             }
         }

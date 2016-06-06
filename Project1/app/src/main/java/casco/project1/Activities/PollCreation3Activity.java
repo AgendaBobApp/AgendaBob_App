@@ -1,7 +1,10 @@
 package casco.project1.Activities;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,6 +30,7 @@ import java.util.TreeSet;
 import casco.project1.Adapters.DragSelectRecyclerAdapterTimes;
 import casco.project1.Interfaces.ClickListener;
 import casco.project1.R;
+import casco.project1.Service.CloudService;
 import casco.project1.dataBackend.Constants;
 import casco.project1.dataBackend.LocalDataStore;
 import casco.project1.dataBackend.Poll;
@@ -34,7 +38,7 @@ import casco.project1.dataBackend.User;
 
 public class PollCreation3Activity
         extends AppCompatActivity
-        implements ClickListener, MaterialCab.Callback,
+        implements ServiceConnection, CloudService.Callback, ClickListener, MaterialCab.Callback,
         View.OnClickListener, DragSelectRecyclerViewAdapter.SelectionListener
 {
     User currentUser;
@@ -115,6 +119,9 @@ public class PollCreation3Activity
         ibCreatePrev = (ImageButton) findViewById(R.id.btnCreatePrev);
         ibCreatePrev.setVisibility(View.INVISIBLE);
         ibCreateNext = (ImageButton) findViewById(R.id.btnCreateNext);
+        if (pollDays.size() < 2) {
+            ibCreateNext.setVisibility(View.INVISIBLE);
+        }
         //ibCreateNext.setText(pollDays.get(1));
         ibCreatePrev.setOnClickListener(this);
         ibCreateNext.setOnClickListener(this);
@@ -125,6 +132,52 @@ public class PollCreation3Activity
         btnSelectAll.setOnClickListener(this);
 
         selectAll();
+
+        Context app = getApplicationContext();
+        Intent serviceIntent = new Intent(app, CloudService.class);
+        app.startService(serviceIntent);
+    }
+
+    private CloudService service;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        Context app = getApplicationContext();
+        Intent serviceIntent = new Intent(app, CloudService.class);
+        bindService(serviceIntent, this, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Context app = getApplicationContext();
+        Intent intent = new Intent(app, CloudService.class);
+        bindService(intent, this, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (service != null) {
+            unbindService(this);
+        }
+    }
+
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder binder) {
+        service = ((CloudService.CloudServiceBinder) binder).getService();
+        service.setListener(this);
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+        if (service != null)
+            service.setListener(null);
+        service = null;
     }
 
     public DragSelectRecyclerView getDragSelectRecyclerView(){
@@ -272,8 +325,12 @@ public class PollCreation3Activity
                     }
                 }
 
+                newPoll.setLongCode(newPoll.getTitle());
                 LocalDataStore populator = new LocalDataStore();
                 populator.savePoll(context, newPoll);
+
+                // Call service to upload new poll
+                service.uploadPolls();
 
                 // Go back to the Home Screen
                 Intent intent = new Intent(this, MainActivity.class);
