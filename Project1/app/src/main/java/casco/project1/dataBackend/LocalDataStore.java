@@ -62,6 +62,7 @@ public class LocalDataStore {
         if (files.length > 0) {
             for (String file : files) {
                 if (file.endsWith(".poll") || file.endsWith(".new")) {
+                    Log.d("CHANG", "File name: " + file);
                     newPoll = loadPoll(c, file);
                     if (newPoll != null) {
                         polls.add(newPoll);

@@ -42,13 +42,14 @@ dependencies {
 }
 
 appengine {
+    httpAddress="0.0.0.0"
     enhancer{
         version="v2"
         api="jdo"
         enhanceOnBuild=true
     }
-  downloadSdk = true
-  appcfg {
-    oauth2 = true
-  }
+    downloadSdk = true
+    appcfg {
+        oauth2 = true
+    }
 }

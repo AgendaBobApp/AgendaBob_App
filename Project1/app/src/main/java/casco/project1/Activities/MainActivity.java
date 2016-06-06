@@ -128,14 +128,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         bindService(intent, this, Context.BIND_AUTO_CREATE);
     }
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        // get a reference to the service, for receiving messages
-//        Context app = getApplicationContext();
-//        Intent intent = new Intent(app, CloudService.class);
-//        bindService(intent, this, Context.BIND_AUTO_CREATE);
-//    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // get a reference to the service, for receiving messages
+        Context app = getApplicationContext();
+        Intent intent = new Intent(app, CloudService.class);
+        bindService(intent, this, Context.BIND_AUTO_CREATE);
+    }
 
     @Override
     protected void onPause() {
