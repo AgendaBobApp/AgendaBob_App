@@ -24,6 +24,7 @@ import casco.project1.dataBackend.Poll;
 
 public class CloudService extends Service {
     private String userID;
+    private int refreshRate = 1000* 60;
 
     public CloudService() {
     }
@@ -58,7 +59,7 @@ public class CloudService extends Service {
             public void run() {
                 updatePolls();
             }
-        }, 1, 10000);
+        }, 1, refreshRate);
 
         return START_STICKY;
     }

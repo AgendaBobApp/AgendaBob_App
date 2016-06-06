@@ -21,7 +21,9 @@ public class Constants {
     public static final String PollStartTimeBundleKey = "POLL START TIME";
     public static final String PollEndTimeBundleKey = "POLL END TIME";
     public static final String UserBundleKey = "USER";
-    public static final String BASE_URL = "http://192.168.43.168:8080/agendabob";
+//    public static final String BASE_URL = "http://192.168.43.168:8080/agendabob";
+    public static final String BASE_URL = "http://192.168.42.158:8080/agendabob";
+//    public static final String BASE_URL_STEFAN = "http://192.168.42.158:8080/agendabob";
     public static final String ENC = "UTF-8";
     public static final String[] WeekDays = {
             "Monday", "Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"
