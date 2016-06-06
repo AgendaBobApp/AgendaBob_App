@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -82,6 +83,13 @@ public class PollDetailsActivity extends AppCompatActivity implements AdapterVie
         Context app = getApplicationContext();
         Intent serviceIntent = new Intent(app, CloudService.class);
         app.startService(serviceIntent);
+
+        for (String day: poll.getBaseTime().getDayList()) {
+            Log.d("CHANG", "Day: " + day);
+            for (String time: poll.getBaseTime().getDayTimesList(day)) {
+                Log.d("CHANG", time);
+            }
+        }
     }
 
     @Override

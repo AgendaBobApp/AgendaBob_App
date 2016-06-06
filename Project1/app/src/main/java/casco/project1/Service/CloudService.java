@@ -105,6 +105,7 @@ public class CloudService extends Service {
                     String json = gson.toJson(poll);
                     post.addFormField("poll", json);
                     key = post.finish();
+                    key = key.replaceAll("\\D+","");
                     poll.setLongCode(key);
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -113,8 +114,11 @@ public class CloudService extends Service {
 
                 Context c = getApplicationContext();
                 String baseFileName = poll.getTitle();
-                populator.renamePoll(c, baseFileName + ".new", key + ".poll");
+                File dir = getFilesDir();
+                File file = new File(dir, baseFileName + ".new");
+                file.delete();
                 populator.savePoll(c, poll);
+                populator.renamePoll(c, key + ".new", key + ".poll");
             }
         }
 
@@ -131,6 +135,7 @@ public class CloudService extends Service {
     private class PollUpdater extends Thread {
          public void run() {
              // Todo: get updates from the cloud
+
 
              // Todo: save downloaded polls to the data store
 
