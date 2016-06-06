@@ -8,7 +8,27 @@
         <servlet-name>MyServlet</servlet-name>
         <url-pattern>/agendabob</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+    <servlet-name>PollPurgeServlet</servlet-name>
+    <servlet-class>com.example.Stefan.myapplication.backend.PollPurgeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PollPurgeServlet</servlet-name>
+        <url-pattern>/cron/pollPurge</url-pattern>
+    </servlet-mapping>
+
+    <security-constraint>
+        <web-resource-collection>
+            <url-pattern>/cron/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
+
 </web-app>
