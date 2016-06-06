@@ -1,5 +1,6 @@
 package casco.project1.Activities;
 
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +13,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -46,9 +49,11 @@ import casco.project1.dataBackend.TestPopulator;
 import casco.project1.dataBackend.TimeSet;
 import casco.project1.dataBackend.User;
 import android.content.ServiceConnection;
+import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, ServiceConnection, CloudService.Callback {
+public class MainActivity extends AppCompatActivity implements View.OnTouchListener, AdapterView.OnItemClickListener, ServiceConnection, CloudService.Callback {
     CoordinatorLayout coordinatorLayout;
+    GestureDetector gestureDetector;
     ListView lvPolls;
     List<Poll> polls;
     TextView test;
@@ -84,6 +89,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         lvPolls = (ListView) findViewById(R.id.lv_polls);
         lvPolls.setAdapter(new PollAdapter(this, polls));
         lvPolls.setOnItemClickListener(this);
+        gestureDetector = new GestureDetector(this,new MyGestutreDetector());
+        coordinatorLayout.setOnTouchListener(this);
         Bundle bundle = this.getIntent().getExtras();
         //loadUser(bundle);
 
@@ -310,6 +317,66 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Log.i("SERIAL TEST", "user: " + depoll.getCreator().getName());
         Log.i("SERIAL TEST", "title: " + depoll.getTitle());
         Log.i("SERIAL TEST", "desc: " + depoll.getDescription());
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        return gestureDetector.onTouchEvent(event);
+    }
+
+    class MyGestutreDetector extends GestureDetector.SimpleOnGestureListener{
+        private static final int SWIPE_MIN_DISTANCE = 120;
+        private static final int SWIPE_MAX_OFF_PATH = 250;
+        private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+
+        // needed to work period DO NOT REMOVE
+        @Override
+        public boolean onDown(MotionEvent e) {
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
+//            Toast.makeText(MainActivity.this, "down event", Toast.LENGTH_SHORT).show();
+//            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+//            builder.setTitle("event down");
+//            builder.setMessage("this is neat");
+//            AlertDialog dialog = builder.create();
+//            dialog.show();
+            return true;
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            try {
+                // in case it is more of an up/down motion
+                if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH) {
+                    return false;
+                }
+
+                // detect swipe left
+                if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+//                    Toast.makeText(MainActivity.this, "Left Swipe", Toast.LENGTH_SHORT).show();
+
+                }
+                // detect swipe right
+                else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+//                    Toast.makeText(MainActivity.this, "Right Swipe", Toast.LENGTH_SHORT).show();
+
+                }
+                // catch if something interesting happens (will is curious)
+//                else {
+//                    Toast.makeText(MainActivity.this, "Error: Bad Swipe", Toast.LENGTH_SHORT).show();
+//
+//                }
+            } catch (Exception e) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("onFling try/catch Exception");
+                builder.setMessage("You Blew it UP! You Blew it UP");
+                AlertDialog dialog = builder.create();
+                dialog.show();
+                Log.e("ERROR", e.getMessage());
+            }
+            return false;
+        }
     }
 }
 
