@@ -45,28 +45,30 @@ Our goals are to remedy these problems by integrating both use cases into a sing
 ### Roadmap
 
 Finished Tasks:
-
   - Home Page
   - Creating a Poll
   - Drag-Select works in a single activity
   - Google Sign-in on the app
+  - Fake-Tabbed activity for multiple poll days
+  - Clearing backstack when finished creating poll
+  - Basic Google App Engine framework
 
 Up Next:
-  - Tabbed activity for multiple poll days
-  - Clearing backstack when finished creating poll
+  - Real-tabbed activity, or other better/maintainable solution
+      - Refactor drag-select POC, to not need material-cab
+      - Explore how to get drag-select working in tabs/fragments
   - Fetching Google account info, primarily Picture
-  - Basic Google App Engine framework
+      - JUST DO IT!
   - Responding to a poll
   - Viewing poll results
-
-Down the Road:
+      - Combine and show responses
   - Backend authentication for fetching poll info
   - Backend code to store polls
-  - Poll ID generation: generate in GAE, send back for storing in Poll.  Need some async stuff here.
   - Clear local data store on logout.
 
 Stretch Goals:
   - Implement polls with specific dates rather than a generic week
-  - Implement Doodle-like single-selct polls.
+  - Implement Doodle-like single-select polls.
   - Other login options, like Facebook
   - Web Interface, accomplish same task, but for desktop.
+  - Poll ID generation: generate in GAE, send back for storing in Poll.  Need some async stuff here.
